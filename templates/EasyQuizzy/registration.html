@@ -1,0 +1,44 @@
+<!--Magdalena Obradovic 2021/0304-->
+
+<html>
+    <head>
+        <title>Registracija</title>
+        <link rel="stylesheet" href="styleReg.css">
+        <meta charset="UTF-8">  
+        <script src="registrationCheck.js"></script>  
+    </head>
+    <body id="regBody">
+        <div class="container">
+            <form style="color: rgb(0, 0, 0);">
+                <label for="username">Korisničko ime:</label>
+                <input type="text" name="username" placeholder="Unesite korisničko ime" required>
+                <label for="name">Ime:</label>
+                <input type="text" name="name" placeholder="Unesite ime:" required>
+                <label for="surname">Prezime:</label>
+                <input type="text" name="surname" placeholder="Unesite Prezime" required>
+                <label for="email">Email adresa</label>
+                <input type="email" name="email" placeholder="Unesite email adresu" required>
+                <label for="gender">Pol:</label>
+                <div>
+                    <input type="radio" id="m" name="gender" value="Muško" required>
+                    <label for="m">Muško</label>
+
+                    <input type="radio" id="z" name="gender" value="Žensko" >
+                    <label for="z">Žensko</label>
+
+                </div>
+                <label for="password">Lozinka:</label>
+                <input type="password" name="password" id = "password" placeholder="Unesite lozinku" required>
+                <label for="passwordVal">Potvrda lozinke:</label>
+                <input type="password" name="passwordVal" id = "passwordVal" placeholder="Potvrdite lozinku" required>
+                <!--<input type="submit" value="Registruj se" onclick="checkPassword()">-->
+                <button onclick="checkPassword()" id="sub">Registruj se</button>
+                <a href="loginPage.html" target="_blank">Prijavi se</a>
+            </form>
+
+        </div>
+
+
+    </body>
+    
+</html>

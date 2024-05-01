@@ -1,0 +1,30 @@
+/*Petar Milojević 2021/0336*/
+.flex-container-Petar > div > label > img
+{
+    width:150%;
+    margin-left:0%;
+    margin-top: 0%;
+    margin-right: 0%;
+    border-radius:15px;
+    margin-bottom: 50%;
+    
+}
+
+.contains-image
+{
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 0%;
+    margin-bottom: 0%;
+}
+
+
+.caption
+{
+    margin-left: 25%;
+    margin-right: 0%;
+    margin-top: 0%;
+    
+    font-size: 150%;
+    
+}

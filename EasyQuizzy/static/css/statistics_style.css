@@ -1,0 +1,17 @@
+/*Petar Milojević 2021/0336*/
+body{background-color:rgb(199, 170, 214) ;}
+
+.tabelica
+{
+    font-weight: bold;
+    font-size: 150%;
+    font-style: normal;
+}
+
+.naslov
+{
+    font-weight: bold;
+    font-size: 150%;
+    font-style: normal;
+    text-align: center;
+}

@@ -1,0 +1,103 @@
+/*Petar Milojević 2021/0336*/
+body
+{
+    background-color:rgb(199, 170, 214); ;
+
+}
+
+h1
+{
+    margin-bottom: 5%;
+}
+
+.container
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10%;
+}
+
+.paragraf
+{
+    text-align: left;
+    width: 100%;
+    padding-left: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 110%;
+    font-weight: bold;
+    background-color: white;
+    border-radius:15px;
+   
+}
+
+.ocenjivanje-naslov
+{
+    font-size: 200%;
+    font-weight: bold;
+}
+
+
+.dugme
+{
+    margin-top: 10px;
+    
+    
+    font-size: 150%;
+    font-weight: bold;
+
+}
+
+.dugme  > .col-sm-12 > .btn
+{
+    font-size: 100%;
+    font-weight: bold;
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.dugme  > .col-sm-12
+{
+    text-align: center;
+    width: 100%;
+}
+
+.dugme  > .col-sm-12 > .linkic > a
+{
+    text-align: center;
+    width: 60%;
+    text-decoration: none;
+}
+
+a:link
+{
+   color: black;
+   font-style: normal;
+   text-decoration: none; 
+}
+
+ a:visited
+{
+    color: black;
+    font-style: normal;
+    text-decoration: none; 
+}
+
+a:hover
+{
+    color: black;
+    font-style: normal;
+    text-decoration: none; 
+}
+a:active
+{
+    color: black;
+    font-style: normal;
+    text-decoration: none; 
+}
+

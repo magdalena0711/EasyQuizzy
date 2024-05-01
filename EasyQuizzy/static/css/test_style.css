@@ -1,0 +1,78 @@
+/*Ilija Miletić 2021/0335*/
+body
+{
+    background-color: rgb(199, 170, 214);
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.header {
+    text-align: left;
+    background-color: rgb(66, 66, 228);
+    color: white;
+    font-size: 150%;
+}
+
+.top {
+    font-size: 300%;
+}
+
+#left_avatar {
+    text-align: left;
+}
+
+#right_avatar {
+    text-align: right;
+}
+
+img {
+    height: 80px;
+    width: 80px;
+}
+
+.question {
+    font-size: 200%;
+    margin-top: 2%;
+}
+
+.answers {
+    margin-top: 3%;
+}
+
+.remaining {
+    font-size: 300%;
+    margin-top: 3%;
+}
+
+td > .btn {
+    margin-top: 5%;
+    width: 600px;
+    font-size: 130%;
+}
+
+#opp_chosen {
+    border-style: solid;
+    border-color: black;
+    border-width: 5px;
+}
+
+#chosen {
+    border-style: solid;
+    border-color: yellow;
+    border-width: 5px;
+}
+
+.hints {
+    margin-top: 7%;
+    margin-left: 29%;
+}
+
+.hints > .btn {
+    margin-left: 3%;
+    width: 25%;
+    font-size: 120%;
+}
+
+.temp {
+    margin-top: 3%;
+}

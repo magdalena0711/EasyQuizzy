@@ -1,0 +1,136 @@
+/*Elena Savić 2021/0332*/
+body{
+    /*background-color: rgb(76, 129, 126)*/
+    /*background-color: rgb(116, 170, 156);*/
+    background-color: rgb(199, 170, 214);
+    /*background-color: rgb(203, 174, 240);*/
+}
+
+.topOfPage{
+    background-color: rgb(132, 91, 154);
+}
+
+
+.table-container{
+    margin-top: 10%;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: rgb(132, 91, 154);
+
+    
+}
+
+.table-containerPerm{
+    margin-top: 5%;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: rgb(132, 91, 154);
+
+}
+
+.table-containerQu{
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: rgb(132, 91, 154);
+    display: none;
+
+}
+
+.table tr:nth-child(even){
+    background-color: rgb(240, 237, 237);
+    
+}
+
+.table tr:nth-child(odd){
+    color: white;
+}
+
+
+.table th{
+    color: white;
+    text-align: center;
+    font: small-caps 12px/30px, serif;
+    
+}
+
+.table td{
+    text-align: center;
+    font: small-caps 12px/30px, serif;
+}
+
+#deleteAlert{
+    display: none;
+}
+
+#inputUser{
+    margin-top: 60%;
+    
+    left: 20%;
+    right: 20%;
+    align-content: center;
+}
+
+.btn-margin{
+    margin: 5%;
+}
+
+.dugmici{
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+[type=radio]:checked + img {
+    outline: 5px solid #f00;
+  }
+
+.imgsCat{
+    width: 35%;
+    object-fit: contain;
+    margin-left: 30%;
+    
+}
+
+.imgIndividualCat{
+    width: 100%;
+    margin: 5%;
+    object-fit: contain;
+}
+
+.radioLabels{
+    width: 30%;
+}
+
+.editCat{
+    margin-top: 5%;
+    font: small-caps 12px/30px, serif;
+}
+
+
+.icons{
+    margin-top: 20px;
+    align-items: center;
+    color: black;
+}
+
+.addingOpt{
+    margin-top: 10%;
+    display: inline;
+}
+
+.textQu{
+    font-weight: bold;
+    font: small-caps 16px/30px, serif;
+}
+
+.answers{
+    margin: auto;
+}
+
+#succ{
+    text-align: center;
+    font-weight: bold;
+}
+
+

@@ -1,0 +1,33 @@
+/*Ilija Miletić 2021/0335*/
+body
+{
+    background-color: rgb(199, 170, 214);
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.naslov {
+    margin-top: 1%;
+}
+
+.spinner-border {
+    height: 100px;
+    width: 100px;
+    margin-top: 10%;
+    margin-left: 46%;
+}
+
+.vreme {
+    margin-top: 3%;
+}
+
+.dugme {
+    margin-top: 15%;
+}
+
+.btn {
+    margin-top: 1%;
+    color: black;
+    font-weight: bold;
+    font-size: 130%;
+}
