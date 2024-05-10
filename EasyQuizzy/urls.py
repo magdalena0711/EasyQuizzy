@@ -20,5 +20,7 @@ urlpatterns = [
     path('main', views_guest_and_reg.main, name='main'),
     path('questionSuggestion', views_guest_and_reg.questionSuggestion, name='questionSuggestion'),
     path('register', views_guest_and_reg.register, name='register'),
-    path('logout', views_guest_and_reg.logout, name='logout')
+    path('logout', views_guest_and_reg.logout, name='logout'),
+    path('permitQuestions', views_administrator.to_permit, name='questions_to_be_permitted'),
+    path('addToPermitted', views_administrator.add_to_permitted, name="add_to_permitted")
 ]

@@ -73,9 +73,9 @@ def get_category_images():
         blobs.append(threes)
     return blobs
 
-def get_permitted_questions():
+def get_questions(question_status):
     #uzimanje svih odobrenih pitanja
-    permitted_questions = Pitanje.objects.values('tekst_pitanja').filter(status = 1).all()
+    permitted_questions = Pitanje.objects.values('tekst_pitanja').filter(status = question_status).all()
     questions = dict()
     
     for i in range(len(permitted_questions)):
@@ -88,7 +88,7 @@ def adding_questions(request):
     
     context = {
         'categories': get_category_images(),
-        'permitted': get_permitted_questions(),
+        'permitted': get_questions(1),
         'message': '',
         'messageChange': '',
         'messagePermitted': ''
@@ -102,7 +102,7 @@ def add_new_question(request):
 
     context = {
         'categories': get_category_images(),
-        'permitted': get_permitted_questions(),
+        'permitted': get_questions(1),
         'messageChange': '',
         'messagePermitted': ''
     }
@@ -202,7 +202,7 @@ def change_question(request):
 
     context = {
         'categories': get_category_images(),
-        'permitted': get_permitted_questions(),
+        'permitted': get_questions(1),
         'message': '',
         'messagePermitted': '',
         'messageChange': msg
@@ -237,7 +237,7 @@ def add_permitted_question(request):
     
     context = {
         'categories': get_category_images(),
-        'permitted': get_permitted_questions(),
+        'permitted': get_questions(1),
         'messageChange': '',
         'message': '',
         'messagePermitted': msg
@@ -280,3 +280,28 @@ def add_moderator(request):
             msg = 'Izabrani korisnik već ima ulogu moderatora'
         
     return JsonResponse({'message' : msg, 'successful': successful})
+
+def to_permit(request):
+    template = loader.get_template('EasyQuizzy/question_permission.html')
+    context = {
+        'questions': get_questions(2)
+    }
+    return HttpResponse(template.render(context, request))
+
+def add_to_permitted(request):
+    template = loader.get_template('EasyQuizzy/question_permission.html')
+
+    text_list = request.POST.getlist('checkbox')
+    
+    for text in text_list:
+        question = Pitanje.objects.filter(tekst_pitanja = text).first()
+        if "permit" in request.POST:
+            question.status = 1
+            question.save()
+        else:
+            question.delete()
+    
+    context = {
+        'questions': get_questions(2)
+    }
+    return HttpResponse(template.render(context, request))
