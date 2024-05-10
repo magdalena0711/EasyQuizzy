@@ -1,16 +1,19 @@
 <!--Elena Savić 2021/0332-->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+     
+    <script src="{% static 'js/addingQuestions.js' %}"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <meta charset="UTF-8">
-</body>
-    <link rel="stylesheet" href="basis.css">
-    <link rel="stylesheet" href="styleGuest.css">
+    <link rel="stylesheet" href="{% static 'css/basis.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleGuest.css' %}">
     
     <title>Pitanja</title>
 </head>
@@ -18,7 +21,7 @@
     <div class="headerMain">
         <div class="main">
             <div class="logoAndButton">
-                <img class="mainLogo" src="logo.jpeg" alt="EasyQuizzy">
+                <img class="mainLogo" src="{% static 'css/logo.jpeg' %}" alt="EasyQuizzy">
             </div>
         </div>
     </div>
@@ -155,34 +158,35 @@
         <div class="row mt-4">
             <a name="addNew"></a>
             <div class="col-sm-12 col-md-12">
-                <form>
-                    <label for="addingQuestions" class="col-sm-12 col-form-label text-center textQu mb-1">Dodavanje novog pitanja</label>
-                    <label for="newCategoryName" class="col-sm-12 col-form-label textQu">Unesite naziv kategorije: </label>
-                    <input type="text" class="form-control">
+                <form action="/easyquizzy/addNewQuestion" method="post">
+                    {% csrf_token %}
+                    <label class="col-sm-12 col-form-label text-center textQu mb-1">Dodavanje novog pitanja</label>
+                    <label class="col-sm-12 col-form-label textQu">Unesite naziv kategorije: </label>
+                    <input type="text" class="form-control" name="category">
                     <label class="col-sm-12 col-form-label textQu">Unesite tekst pitanja: </label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" name="question">
                     <label class="textQu mt-2">Izaberite težinu pitanja:</label> &nbsp;
                     <label for="easy">1</label>
-                    <input type="radio" name="weight" id="easy"> &nbsp;
+                    <input type="radio" name="weight" id="easyyy" value="1"> &nbsp;
                     <label for="medium">2</label>
-                    <input type="radio" name="weight" id="medium"> &nbsp;
+                    <input type="radio" name="weight" id="mediummm" value="2"> &nbsp;
                     <label for="hard">3</label>
-                    <input type="radio" name="weight" id="hard">
+                    <input type="radio" name="weight" id="harddd" value="3">
                     <label class="col-sm-12 col-form-label textQu">Odgovori: </label>
                     <div class="answers">
                         <table>
                             <tr>
                                 <td>
-                                    <input type="text" class="col-sm-3 form-control bg-success">
+                                    <input type="text" class="col-sm-3 form-control bg-success" name="correct">
                                 </td>
                                 <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger">
+                                    <input type="text" class="col-sm-3 form-control bg-danger" name="incorrect1">
                                 </td>
                                 <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger">
+                                    <input type="text" class="col-sm-3 form-control bg-danger" name="incorrect2">
                                 </td>
                                 <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger">
+                                    <input type="text" class="col-sm-3 form-control bg-danger" name="incorrect3">
                                 </td>
                             </tr>
                         </table>
@@ -191,13 +195,17 @@
                     
                     <br>
                     <div class="text-center">
-                        <button type="button" class="btn btn-dark">
+                        <button type="submit" class="btn btn-dark">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                 <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
                             </svg>
                             Prosledi
                         </button>
                         
+                    </div>
+
+                    <div class="text-center fst-italic">
+                        {{ message }}
                     </div>
                 </form>
             </div>
@@ -209,132 +217,72 @@
             <label class="col-sm-12 col-form-label text-center textQu mb-1">Uređivanje postojećeg pitanja</label>
             <div class="col-sm-3">
                 <div>
-                    <label class="radioLabels">
-                        <input type="radio" name="test" value="small" class="dugmici" id="musicShow">
-                        <img src="music.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
-                    <label class="radioLabels" onclick="toggleTable()">
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="literature.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
+                    {% for elem in categories %}
                     
-                    <label class="radioLabels">
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="games.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
-                </div>
-                <div>
-                    <label class="radioLabels">
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="geography.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
-                    <label class="radioLabels">
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="cinematography.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
-                    <label class="radioLabels">
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="sport.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
-                </div>
-                <div>
-                    <label class="radioLabels">
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="events.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
-                    <label class="radioLabels">
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="art.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
-                    <label class="radioLabels">
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="history.jpg" alt="Muzika" class="imgIndividualCat">
-                    </label>
-                </div>
-                <div>
+                    <div>
+                        {% for key, value in elem.items%}
+                        <label class="radioLabels">
+                            <input type="radio" name="test" value="small" class="dugmici" id="{{ key }}">
+                            <img src="data:image/png;base64,{{ value }}" alt="Image" class="imgIndividualCat" >
+                        </label>
+                        {%  endfor %} 
+                    </div>  
                     
-                    <label>
-                        <input type="radio" name="test" value="small" class="dugmici">
-                        <img src="collage3.jpg" alt="Muzika" class="imgsCat" >
-                    </label>
+
+                    {%  endfor %}
                 </div>
+               
             </div>
 
             <div class="col-sm-9">
                 
-                <div class="table-containerQu" id="tableLiterature">
+                <div class="table-containerQu" id="tableCategory">
                     <table class="table table-striped table-hover" >
-                        <thead>
-                            <th>Redni broj</th>
-                            <th>Tekst</th>
-                            <th>Težina</th>
-                            <th>Tačan odgovor</th>
-                            <th>Netačan odgovor</th>
-                            <th>Netačan odgovor</th>
-                            <th>Netačan odgovor</th>
-                            <th>Izaberite</th>
+                        <thead id="headCategories">
+                            
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1.</td>
-                                <td>Ko je autor romana ubiti pticu rugalicu?</td>
-                                <td>1</td>
-                                <td>Harper Li</td>
-                                <td>Brem Stoker</td>
-                                <td>Puškin</td>
-                                <td>Margaret Mičel</td>
-                                <td>
-                                    <input type="radio" name="choice">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2.</td>
-                                <td>Koje delo nije napisao Ivo Andrić?</td>
-                                <td>1</td>
-                                <td>Seobe</td>
-                                <td>Prokleta avlija</td>
-                                <td>Znakovi pored puta</td>
-                                <td>Travnička hronika</td>
-                                <td>
-                                    <input type="radio" name="choice">
-                                </td>
-                            </tr>
+                        <tbody id="bodyCategories">
+                            
                         </tbody>
                     </table>
 
                     
                 </div>
-                <label class="col-sm-12 col-form-label textQu">Tekst pitanja: </label>
-                    <input type="text" class="form-control" placeholder="Ko je autor romana ubiti pticu rugalicu?">
+                
+                <form action="/easyquizzy/changeQuestion" method="post">
+                    {% csrf_token %}
+                    <label class="col-sm-12 col-form-label textQu">Tekst pitanja: </label>
+                    <input type="text" class="form-control"  id="textCat" name="question">
                     <label class="textQu mt-2">Izaberite težinu pitanja:</label> &nbsp;
                     <label for="easy">1</label>
-                    <input type="radio" name="weight" id="easy" checked> &nbsp;
+                    <input type="radio" name="weight" id="easy" value="1"> &nbsp;
                     <label for="medium">2</label>
-                    <input type="radio" name="weight" id="medium"> &nbsp;
+                    <input type="radio" name="weight" id="medium" value="2"> &nbsp;
                     <label for="hard">3</label>
-                    <input type="radio" name="weight" id="hard">
+                    <input type="radio" name="weight" id="hard" value="3">
                     <label class="col-sm-12 col-form-label textQu">Odgovori: </label>
                     <div class="answers">
                         <table>
                             <tr>
                                 <td>
-                                    <input type="text" class="col-sm-3 form-control bg-success" placeholder="Harper Li">
+                                    <input type="text" class="col-sm-3 form-control bg-success" id="correctCat" name="correct">
                                 </td>
                                 <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger" placeholder="Brem Stoker">
+                                    <input type="text" class="col-sm-3 form-control bg-danger" id="incorrect1Cat" name="incorrect1">
                                 </td>
                                 <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger" placeholder="Puškin">
+                                    <input type="text" class="col-sm-3 form-control bg-danger" id="incorrect2Cat" name="incorrect2">
                                 </td>
                                 <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger" placeholder="Margaret Mičel">
+                                    <input type="text" class="col-sm-3 form-control bg-danger" id="incorrect3Cat" name="incorrect3">
                                 </td>
                             </tr>
                         
                         </table>
                     </div>
+                    <input type="text" hidden id="idPit" name="id">
                     <div class="text-center mt-2">
-                        <button type="button" class="btn btn-dark">
+                        <button type="submit" class="btn btn-dark">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
                                 <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
                             </svg>
@@ -342,8 +290,12 @@
                         </button>
                         
                     </div>
-                </div>
+                    <div class="text-center fst-italic">
+                        {{ messageChange }}
+                    </div>
+                </form>
             </div>
+        </div>
     
         <hr>
         <div class="row">
@@ -358,76 +310,72 @@
                             <th>Izaberite</th>
                         </thead>
                         <tbody>
+                            {% for key, value in permitted.items %}
                             <tr>
-                                <td>1.</td>
-                                <td>Koje boje je haljina Ane Karenjine na balu na kome upoznaje Vronskog?</td>
-                                <td>
-                                    <input type="radio" name="choice">
+                                <td id="{{ key }}7">{{ key }}</td>
+                                <td id="{{ key }}8">{{ value }}</td>
+                                <td id="{{ key }}9">
+                                    <input type="radio" name="choicePermitted" class="radioPermitted" >
                                 </td>
                             </tr>
+                            {% endfor%}
                         </tbody>
 
                     </table>
 
                     
                 </div>
-                    <label for="newCategoryName" class="col-sm-12 col-form-label textQu">Unesite naziv kategorije: </label>
-                    <input type="text" class="form-control">
-                    <label class="col-sm-12 col-form-label textQu">Tekst pitanja: </label>
-                    <input type="text" class="form-control">
-                    <label class="textQu mt-2">Izaberite težinu pitanja:</label> &nbsp;
-                    <label for="easy">1</label>
-                    <input type="radio" name="weight" id="easy"> &nbsp;
-                    <label for="medium">2</label>
-                    <input type="radio" name="weight" id="medium"> &nbsp;
-                    <label for="hard">3</label>
-                    <input type="radio" name="weight" id="hard">
-                    <label class="col-sm-12 col-form-label textQu">Odgovori: </label>
-                    <div class="answers">
-                        <table>
-                            <tr>
-                                <td>
-                                    <input type="text" class="col-sm-3 form-control bg-success" >
-                                </td>
-                                <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger" >
-                                </td>
-                                <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger" >
-                                </td>
-                                <td>
-                                    <input type="text" class="col-sm-3 form-control bg-danger" >
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="text-center mt-2">
-                        <button type="button" class="btn btn-dark">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                            </svg>
-                            Prosledi
-                        </button>
-                        
-                    </div>
+                    <form action="/easyquizzy/addPermittedQuestion" method="post">
+                        {% csrf_token %}
+                        <label  class="col-sm-12 col-form-label textQu">Unesite naziv kategorije: </label>
+                        <input type="text" class="form-control" name="category">
+                        <label class="col-sm-12 col-form-label textQu">Tekst pitanja: </label>
+                        <input type="text" class="form-control" name="question" id="textPermitted" readonly>
+                        <label class="textQu mt-2">Izaberite težinu pitanja:</label> &nbsp;
+                        <label for="easy">1</label>
+                        <input type="radio" name="weight" id="easyy" value="1"> &nbsp;
+                        <label for="medium">2</label>
+                        <input type="radio" name="weight" id="mediumm" value="2"> &nbsp;
+                        <label for="hard">3</label>
+                        <input type="radio" name="weight" id="hardd" value="3">
+                        <label class="col-sm-12 col-form-label textQu">Odgovori: </label>
+                        <div class="answers">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="text" class="col-sm-3 form-control bg-success" name="correct">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="col-sm-3 form-control bg-danger" name="incorrect1">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="col-sm-3 form-control bg-danger" name="incorrect2">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="col-sm-3 form-control bg-danger" name="incorrect3">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="text-center mt-2">
+                            <button type="submit" class="btn btn-dark" id="btnPermitted">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                </svg>
+                                Prosledi
+                            </button>
+                            
+                        </div>
+                        <div class="text-center fst-italic">
+                            {{ messagePermitted }}
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
     </div>
         
-
-
-    <script>
-        function toggleTable() {
-          var table = document.getElementById("tableLiterature");
-          if (table.style.display === "none") {
-            table.style.display = "table"; // Show the table
-          } else {
-            table.style.display = "none"; // Hide the table
-          }
-        }
-      </script>
     
 </body>
 </html>
