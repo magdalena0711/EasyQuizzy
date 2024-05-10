@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
-from EasyQuizzy import views, views_administrator
+from . import views_guest_and_reg, views_administrator
 
 urlpatterns = [
-    path('', views.statistics, name='statistics'),
+
     path('users', views_administrator.show_users, name='show_users'),
     path('delete', views_administrator.delete_user, name='delete_user'),
     path('addingQuestions', views_administrator.adding_questions, name='adding_questions'),
@@ -12,5 +12,13 @@ urlpatterns = [
     path('changeQuestion', views_administrator.change_question, name='change_question'),
     path('addPermittedQuestion', views_administrator.add_permitted_question, name='add_permitted_question'),
     path('categories', views_administrator.show_categories, name='show_categories'),
-    path('addModerator', views_administrator.add_moderator, name='add_moderator')
+    path('addModerator', views_administrator.add_moderator, name='add_moderator'),
+    path('statistics', views_guest_and_reg.statistics, name='statistics'),
+    #path('bestRatedQuestions/', views_guest_and_reg.bestRatedQuestions, name='bestRatedQuestions'),
+    path('', views_guest_and_reg.login, name='login'),
+    path('login', views_guest_and_reg.login, name='login'),
+    path('main', views_guest_and_reg.main, name='main'),
+    path('questionSuggestion', views_guest_and_reg.questionSuggestion, name='questionSuggestion'),
+    path('register', views_guest_and_reg.register, name='register'),
+    path('logout', views_guest_and_reg.logout, name='logout')
 ]

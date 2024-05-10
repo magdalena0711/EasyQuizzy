@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import mysql.connector
 
+
 class Administrator(models.Model):
     idkor = models.OneToOneField('Korisnik', models.DO_NOTHING, db_column='IdKor', primary_key=True)  # Field name made lowercase.
 

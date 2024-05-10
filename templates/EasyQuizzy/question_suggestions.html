@@ -1,11 +1,12 @@
 <!--Elena Savić 2021/0332-->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="basis.css">
-    <link rel="stylesheet" href="styleGuest.css">
+    <link rel="stylesheet" href="{% static 'css/basis.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleGuest.css' %}">
     <meta charset="UTF-8">
     <title>Predlog Pitanja</title>
 </head>
@@ -14,7 +15,7 @@
     <div class="headerMain">
         <div class="main">
             <div class="logoAndButton">
-                <img class="mainLogo" src="logo.jpeg" alt="EasyQuizzy">
+                <img class="mainLogo" src="{% static 'css/logo.jpeg' %}" alt="EasyQuizzy">
             </div>
         </div>
     </div>
@@ -23,7 +24,7 @@
         <nav class="mainNav">
             <a href="logo.jpeg" class="logoMain" data-tracking-label="logo" ></a>
             <div class="mainIcons">
-                <a href="regMainPage.html" class="icons" id="category">
+                <a href="main" class="icons" id="category">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
                         <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
                     </svg>
@@ -43,7 +44,7 @@
                     </svg>
                     <span class="globalNavLabels">Test</span>
                 </a>
-                <a href="statistics.html" class="icons" id="test">
+                <a href="statistics" class="icons" id="test">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16">
                         <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0z"/>
                         <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
@@ -51,14 +52,14 @@
                       </svg>
                     <span class="globalNavLabels">Statistika</span>
                 </a>
-                <a href="question_suggestions.html" class="icons" id="test">
+                <a href="questionSuggestions" class="icons" id="test">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-raised-hand" viewBox="0 0 16 16">
                         <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a1 1 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207"/>
                         <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
                       </svg>
                     <span class="globalNavLabels">Predloži pitanje</span>
                 </a>
-                <a href="loginPage.html" class="icons" id="reg">
+                <a href="login" class="icons" id="reg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
                         <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
@@ -75,44 +76,42 @@
             <div class="mainIcons">
                 <a href="logo.jpeg" class="logoMain" data-tracking-label="logo" ></a>
                 <div class="mainIcons">
-                    <a href="mainGuestPage.html" class="icons" id="category">
+                    <a href='main' class="icons" id="category">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
                             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
                             <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
                           </svg>
                         <span class="globalNavLabels">Korisničko ime</span>
                     </a>
+                </div>
             </div>
         </nav>
     </div> 
 
     <div class="container">
-        
-        <form>
+
         <div class="row">
             
             <div class="col-sm-12 col-md-12 mt-5">
-                <label class="col-sm-12 col-form-label textQu">Tekst pitanja: </label>
-                <input type="text" class="form-control">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12 col-md-2"></div>
-            <div class="col-sm-12 col-md-12">
+                <form style="color:rgb(0, 0, 0) ;" action="/easyquizzy/questionSuggestion" method="post">
+                    {% csrf_token %}
+                    <label class="col-sm-12 col-form-label textQu">Tekst pitanja: </label>
+                    <input type="text" class="form-control" name = "text">
+                    <div class="col-sm-12 col-md-2"></div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-dark btn-margin" onclick="showMessage()">
+                        <button type="submit" class="btn btn-dark btn-margin" >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                 <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
                             </svg>
                             Prosledi
                         </button>
-
                     </div>
-                    
+                </form>
+            <div class="text-center fst-italic" style="color: red ">
+                {{ message }}
             </div>
         </div>
-        </form>
+
 
         <div class="row">
             <div class="col-sm-12 text-center">
@@ -120,15 +119,13 @@
             </div>
         </div>
            
-            
-        
-
-        
     </div>
 
 
 
-    
+
+</div>
+
     
 </body>
 </html>
