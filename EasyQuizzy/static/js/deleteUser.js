@@ -23,9 +23,11 @@ $(document).ready(function(){
         $("#succ").text(message);
         $("#succ").css({
             "font-style": "italic",
-            'font-size': "80%"
+            'font-size': "80%",
+            'font-weight': 'bold'
         });
         clickedRadio = null;
+        $("#"+username).prop("checked", false);
         $("#inputUser").attr("disabled", false);
         setInterval(function(){
             $("#succ").text("");
@@ -88,7 +90,7 @@ $(document).ready(function(){
     }
     const csrftoken = getCookie('csrftoken');
 
-    $("#yesButton").click(function(){
+    function get_user(){
         var username = null;
         if(clickedRadio != null){
             username = clickedRadio.attr("id");
@@ -96,8 +98,14 @@ $(document).ready(function(){
         }else if($("#inputUser").val() != ''){
             username = $("#inputUser").val();
         }
+        return username;
+    }
+
+    $("#yesButton").click(function(){
+        msg = "Niste izabrali korisnika koga želite da obrišete";
+        username = get_user();
         if (username == null){
-            successfulRequest("Niste izabrali korisnika koga želite da obrišete");
+            successfulRequest(msg);
             return;
         }
 
@@ -117,6 +125,31 @@ $(document).ready(function(){
             }
         })
 
+    });
+
+    $("#moderatorButton").click(function(){
+        msg = "Niste izabrali korisnika koga želite postavite za moderatora";
+        username = get_user();
+        if (username == null){
+            successfulRequest(msg);
+            return;
+        }
+
+        $.ajax({
+            url: '/easyquizzy/addModerator',
+            method: 'POST',
+            headers:{
+                "X-CSRFToken": csrftoken,
+                "Content-Type": "application/json"
+            },
+            data: {'username': username},
+            success: function(response){
+                successfulRequest(response['message']);
+                if(response['successful'] == true){
+                    $("#role"+username).text('moderator');
+                }
+            }
+        })
     });
     
 

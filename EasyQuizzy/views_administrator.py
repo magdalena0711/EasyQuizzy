@@ -179,32 +179,35 @@ def question_update(question, text, weight, correct, incorrect1, incorrect2, inc
 def change_question(request):
     template = loader.get_template('EasyQuizzy/adding_questions.html')
 
-    id = request.POST['id']
-    text = request.POST['question']
-    weight = request.POST['weight']
-    correct = request.POST['correct']
-    incorrect1 = request.POST['incorrect1']
-    incorrect2 = request.POST['incorrect2']
-    incorrect3 = request.POST['incorrect3']
+    if len(request.POST.keys()) != 8:
+        msg = 'Niste popunili sva polja!'
+    else:
+        id = request.POST['id']
+        text = request.POST['question']
+        weight = request.POST['weight']
+        correct = request.POST['correct']
+        incorrect1 = request.POST['incorrect1']
+        incorrect2 = request.POST['incorrect2']
+        incorrect3 = request.POST['incorrect3']
+
+        id = int(id)
+        question = Pitanje.objects.filter(tekst_pitanja = text).all()
+        if question[0].idpit != id:
+            msg = "Pitanje sa datim tekstom već postoji!"
+        else:
+            change = Pitanje.objects.filter(idpit = id).all()
+            change = change[0]
+            question_update(change, text, weight, correct, incorrect1, incorrect2, incorrect3)
+            msg = "Uspešno ste izvršili izmenu pitanja!"
 
     context = {
         'categories': get_category_images(),
         'permitted': get_permitted_questions(),
         'message': '',
-        'messagePermitted': ''
+        'messagePermitted': '',
+        'messageChange': msg
     }
-
-    id = int(id)
-    question = Pitanje.objects.filter(tekst_pitanja = text).all()
-    if question[0].idpit != id:
-        msg = "Pitanje sa datim tekstom već postoji!"
-    else:
-        change = Pitanje.objects.filter(idpit = id).all()
-        change = change[0]
-        question_update(change, text, weight, correct, incorrect1, incorrect2, incorrect3)
-        msg = "Uspešno ste izvršili izmenu pitanja!"
-
-    context['messageChange'] = msg
+    
 
     return HttpResponse(template.render(context, request))
 
@@ -242,3 +245,38 @@ def add_permitted_question(request):
 
     return HttpResponse(template.render(context, request))
 
+def show_categories(request):
+    template = loader.get_template('EasyQuizzy/categories.html')
+
+    images = get_category_images()
+
+    context = {
+        'images': images
+    }
+
+    return HttpResponse(template.render(context, request))
+
+def add_moderator(request):
+    data = request.body.decode()
+    username = data.split("=")[1]
+    user_list = Korisnik.objects.filter(korisnicko_ime = username).filter(vazeci = 1).all()
+    successful = False
+
+    if len(user_list) == 0:
+        msg = "Korisnik sa unetim korisničkim imenom ne postoji"
+    else:
+        user = user_list[0]
+        id = user.idkor
+        registered_user = RegistrovaniKorisnik.objects.filter(idkor = id).all()
+        if len(registered_user) > 0:
+            registered_user = registered_user[0]
+            registered_user.delete()
+            moderator = Moderator()
+            moderator.idkor = user
+            moderator.save()
+            successful = True
+            msg = 'Uspešno ste izvršili postavljanje moderatora'
+        else:
+            msg = 'Izabrani korisnik već ima ulogu moderatora'
+        
+    return JsonResponse({'message' : msg, 'successful': successful})
