@@ -8,16 +8,19 @@
     </head>
     <body id="LoginBody" >
         <div class="container">  
-            <form style="color:rgb(0, 0, 0) ;">
+            <form style="color:rgb(0, 0, 0) ;" action="/easyquizzy/login" method="post">
+                {% csrf_token %}
                 <label for="username">Korisničko ime:</label>
                 <input type="text" name="username" placeholder="Unesite korisničko ime" required>
                 <label for="password">Lozinka:</label>
                 <input type="password" name="password" placeholder="Unesite lozinku" required>
                 <input type="submit" value="Prijavi se">
                 <a href="mainGuestPage.html" target="_blank" id="pocetnaGost" style="margin-bottom: 5px;">Prijava kao gost</a>
-                <a href="registration.html" target="_blank" style="margin-bottom: 5px;">Registruj se</a>
+                <a href="register" target="_blank" style="margin-bottom: 5px;">Registruj se</a>
             </form>
-            
+            <div class="text-center fst-italic" style="color: red ">
+                {{ message }}
+            </div>
         </div>
 
     </body>

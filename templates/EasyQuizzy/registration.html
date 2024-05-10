@@ -1,15 +1,17 @@
 <!--Magdalena Obradovic 2021/0304-->
-
+{% load static %}
 <html>
     <head>
         <title>Registracija</title>
-        <link rel="stylesheet" href="styleReg.css">
-        <meta charset="UTF-8">  
-        <script src="registrationCheck.js"></script>  
+        <link rel="stylesheet" href="{% static 'css/styleReg.css' %}">
+        <meta charset="UTF-8">
+        <script src="{% static 'js/registrationCheck.js' %}"></script>
+
     </head>
     <body id="regBody">
         <div class="container">
-            <form style="color: rgb(0, 0, 0);">
+            <form style="color: rgb(0, 0, 0);" action="/easyquizzy/register" method="post">
+                {% csrf_token %}
                 <label for="username">Korisničko ime:</label>
                 <input type="text" name="username" placeholder="Unesite korisničko ime" required>
                 <label for="name">Ime:</label>
@@ -33,8 +35,12 @@
                 <input type="password" name="passwordVal" id = "passwordVal" placeholder="Potvrdite lozinku" required>
                 <!--<input type="submit" value="Registruj se" onclick="checkPassword()">-->
                 <button onclick="checkPassword()" id="sub">Registruj se</button>
-                <a href="loginPage.html" target="_blank">Prijavi se</a>
+                <a href="login" target="_blank">Prijavi se</a>
             </form>
+
+            <div class="text-center fst-italic">
+                {{ messageChange }}
+            </div>
 
         </div>
 
