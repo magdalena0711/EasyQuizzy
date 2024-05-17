@@ -63,20 +63,36 @@
 
 </form>
 
+<div>
+    <form action="/easyquizzy/finding/" id="multiUpdate">
+        <button type="submit">Multi</button>
+    </form>
+    
+</div>
+
 <script>
     function submitForm() {
-    var single_izbor = document.getElementById('izbor_single').checked;
-    var multi_izbor = document.getElementById('izbor_multi').checked;
-    if(!single_izbor && !multi_izbor)
-    {
-        alert("Niste izabrali nijednu opciju,pa ne mozete dalje!");
-    }
-    else
-    {
-        document.getElementById('nastavi_dalje').submit();
+        var single_izbor = document.getElementById('izbor_single').checked;
+        var multi_izbor = document.getElementById('izbor_multi').checked;
+        if(!single_izbor && !multi_izbor)
+        {
+            alert("Niste izabrali nijednu opciju,pa ne mozete dalje!");
+        }else
+        {
+            document.getElementById('nastavi_dalje').submit();
+        }
     }
 
-}
+
+
+    let form = document.getElementById("multiUpdate");
+    form.onsubmit = function(event){
+        let roomName = parseInt(Math.floor(Math.random()*100));
+        this.action = "finding/" + roomName + "/";
+        console.log(this.action);
+        this.submit();
+    }
+
 </script>
 
 

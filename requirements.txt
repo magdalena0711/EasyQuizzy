@@ -1,0 +1,6 @@
+channels
+mysql-connector-python
+mysqlclient
+channels-redis
+daphne
+docutils
