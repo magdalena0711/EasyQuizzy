@@ -10,6 +10,12 @@ body{
     background-color: rgb(132, 91, 154);
 }
 
+.imagePerCategory{
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+}
+
 
 .table-container{
     margin-top: 10%;
@@ -127,6 +133,8 @@ body{
 .answers{
     margin: auto;
 }
+
+
 
 
 

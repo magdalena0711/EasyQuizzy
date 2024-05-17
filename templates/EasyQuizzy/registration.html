@@ -34,13 +34,14 @@
                 <label for="passwordVal">Potvrda lozinke:</label>
                 <input type="password" name="passwordVal" id = "passwordVal" placeholder="Potvrdite lozinku" required>
                 <!--<input type="submit" value="Registruj se" onclick="checkPassword()">-->
-                <button onclick="checkPassword()" id="sub">Registruj se</button>
+                <button onclick="validateUser()" id="sub">Registruj se</button>
                 <a href="login" target="_blank">Prijavi se</a>
+
+                <div style="text-align: center; color: red; font-weight: bold;">
+                    {{ message }}
+                </div>
             </form>
 
-            <div class="text-center fst-italic">
-                {{ messageChange }}
-            </div>
 
         </div>
 

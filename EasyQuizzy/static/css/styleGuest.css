@@ -153,10 +153,10 @@ img{
     display: inline-block;
     cursor: pointer;
     border: #555;
-  }
-  
+}
+
   /* The actual popup (appears on top) */
-  .popup .popuptext {
+.popup .popuptext {
     visibility: hidden;
     width: 160px;
     background-color: #555;
@@ -166,13 +166,13 @@ img{
     padding: 8px 0;
     position: absolute;
     z-index: -1;
-    bottom: -630%;
+    top: 100%;
     left: 50%;
-    margin-left: -80px;
-  }
-  
+    margin-left: -90px;
+}
+
   /* Popup arrow */
-  .popup .popuptext::after {
+.popup .popuptext::after {
     content: "";
     position: absolute;
     bottom: 100%;
@@ -181,15 +181,15 @@ img{
     border-width: 5px;
     border-style: solid;
     border-color: #555 transparent transparent transparent;
-  }
-  
+}
+
   /* Toggle this class when clicking on the popup container (hide and show the popup) */
-  .popup .show {
+.popup .show {
     visibility: visible;
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s
-  }
-  
+}
+
 input[type="radio"]{
     display: inline-block;
     border-color: #555;

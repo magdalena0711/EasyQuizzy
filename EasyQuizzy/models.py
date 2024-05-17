@@ -128,7 +128,7 @@ class DjangoSession(models.Model):
 class Kategorija(models.Model):
     idkat = models.AutoField(db_column='IdKat', primary_key=True)  # Field name made lowercase.
     naziv = models.CharField(db_column='Naziv', max_length=45)  # Field name made lowercase.
-    slika = models.TextField(db_column='Slika')  # Field name made lowercase.
+    slika = models.BinaryField(null=True, blank=True)
 
     class Meta:
         managed = False

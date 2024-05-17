@@ -1,4 +1,5 @@
 <!--Petar Milojević 2021/0336-->
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +8,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="picking_category_style.css">
-    <link rel="stylesheet" href="picking_choice_singleplayer_or_multiplaayer.css">
+    <link rel="stylesheet" href="{% static  'css/picking_category_style.css' %}">
+    <link rel="stylesheet" href="{% static  'css/picking_choice_singleplayer_or_multiplaayer.css' %}">
     <meta charset="UTF-8">
     <title>Biranje singleplayer ili multiplayer</title>
 </head>
@@ -17,23 +18,25 @@
 <div class="flex-container-Petar-naslov">
     <h1> Izaberite tip igre</h1>
 </div>
-       
 
+
+<form action="picking_category_number_of_questions_singleplayer" id="nastavi_dalje" method="post">
+    {% csrf_token %}
 <div class="flex-container-Petar">
 
 
         <div class="contains-image">
             <div class="caption">Singleplayer</div>
             <label>
-                <input type="radio" name="test" value="small" class="dugmici">
-                <img src="avatar_singleplayer-bela_pozadina.jpg" alt="Avatar Singleplayer" >
+                <input type="radio" name="test" id="izbor_single" value="small_single" class="dugmici" >
+                <img src="{% static 'css/avatar_singleplayer_bela_pozadina.jpg' %}" style="margin:0px" alt="Avatar Singleplayer" >
             </label>
         </div>
         <div class="contains-image">
             <div class="caption">Multiplayer</div>
             <label>
-                <input type="radio" name="test" value="small" class="dugmici">
-                <img src="avatar_multiplayer-bela_pozadina.png" alt="Avatar Multiplayer" >
+                <input type="radio" name="test" id="izbor_multi" value="small_multi" class="dugmici" >
+                <img src="{% static 'css/avatar_singleplayer_bela_pozadina.jpg' %}" style="margin:0px"  alt="Avatar Multiplayer" >
             </label>
         </div>
 
@@ -41,12 +44,40 @@
 
 <div class="flex-container-Petar-biranje-broja-pitanja">
 
-    <a href="picking_category_number_of_questions_singleplayer.html">Singleplayer</a>
-    <a href="finding_opponent.html">Multiplayer</a>
+
+
+    <button type="button" style="padding: 30px;margin-left:80px;font-size: 30px;
+    background-color: rgb(133, 86, 158);
+    border-radius: 15%;
+    border-width: 7px;
+    border-color: white;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: x-large;
+" onclick="submitForm()">Nastavi dalje</button>
+
+
 
 </div>
 
+</form>
 
+<script>
+    function submitForm() {
+    var single_izbor = document.getElementById('izbor_single').checked;
+    var multi_izbor = document.getElementById('izbor_multi').checked;
+    if(!single_izbor && !multi_izbor)
+    {
+        alert("Niste izabrali nijednu opciju,pa ne mozete dalje!");
+    }
+    else
+    {
+        document.getElementById('nastavi_dalje').submit();
+    }
+
+}
+</script>
 
 
 </body>

@@ -1,4 +1,5 @@
 <!--Petar Milojević 2021/0336-->
+{%  load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,107 +8,134 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="picking_category_style.css">
-    <link rel="stylesheet" href="styleGuest.css">
+    <link rel="stylesheet" href="{% static  'css/picking_category_style.css' %}">
+
+    <link rel="stylesheet" href="{% static  'css/styleGuest.css' %}">
     <meta charset="UTF-8">
     <title>Biranje kategorije i broja pitanja za izradu testa singleplayer</title>
 </head>
 
 <body>
+
+<form action="test_singleplayer" id="radi_test" method="post">
+    {% csrf_token %}
+
     <div class="flex-container-Petar-naslov">
         <h1> Izaberite kategoriju</h1></div>
-       
-        
+
+
 <div class="flex-container-Petar">
 
 
         <div class="contains-image">
             <div class="caption">Opste znanje</div>
             <label>
-                <input type="radio"  value="small" class="dugmici">
-                <img src="collage3.jpg" alt="Muzika" >
+                <input type="radio"  value="opsta" class="dugmici" name="dugmad">
+                <img src="{% static 'css/collage3.jpg' %}" alt="Muzika" >
             </label>
         </div>
-        <div class="contains-image">
-            <div class="caption">Muzika</div>
-            <label>
-                <input type="radio"  value="small" class="dugmici">
-                <img src="music.jpg" alt="Muzika" >
-            </label>
-        </div>
-        <div class="contains-image">
-            <div class="caption">Knjizevnost</div>
-            <label>
-                <input type="radio"  value="small" class="dugmici">
-                <img src="literature.jpg" alt="Muzika" >
-            </label>
-        </div>
-        <div class="contains-image">
-            <div class="caption">Umetnost</div>
-            <label>
-                <input type="radio"  value="small" class="dugmici">
-                <img src="art.jpg" alt="Muzika" >
-            </label>
-        </div>
-        <div class="contains-image">
-            <div class="caption">Sport</div>
-            <label>
-                <input type="radio"  value="small" class="dugmici">
-                <img src="sport.jpg" alt="Muzika">
-            </label>
-        </div>
+
+    {% for category,picture,red_slika in data %}
+            {% if category.idkat < 5 %}
+                    <div class="contains-image">
+                            <div class="caption">{{ category.naziv }}</div>
+                            <label>
+                                <input type="radio"  value="{{category.naziv}}" class="dugmici" name="dugmad">
+                                <img src="data:image/jpeg;base64,{{picture}}" alt="{{ category.naziv }}">
+                            </label>
+                    </div>
+            {% endif %}
+
+        {% endfor %}
 </div>
 
-<div class="flex-container-Petar">
+        {% for i in range %}
 
-    <div class="contains-image">
-        <div class="caption">Kinematografija</div>
-        <label>
-            <input type="radio"  value="small" class="dugmici">
-            <img src="cinematography.jpg" alt="Muzika" >
-        </label>
-    </div>
-    <div class="contains-image">
-        <div class="caption">Geografija</div>
-        <label>
-            <input type="radio"  value="small" class="dugmici">
-            <img src="geography.jpg" alt="Muzika" >
-        </label>
-    </div>
-    <div class="contains-image">
-        <div class="caption">Desavanja u svetu</div>
-        <label>
-            <input type="radio"  value="small" class="dugmici">
-            <img src="events.jpg" alt="Muzika" >
-        </label>
-    </div>
-    <div class="contains-image">
-        <div class="caption">Igrice</div>
-        <label>
-            <input type="radio"  value="small" class="dugmici">
-            <img src="games.jpg" alt="Muzika" >
-        </label>
-    </div>
-    <div class="contains-image">
-        <div class="caption">Istorija</div>
-        <label>
-            <input type="radio"  value="small" class="dugmici">
-            <img src="history.jpg" alt="Muzika">
-        </label>
-    </div>
-</div>
+            <div class="flex-container-Petar">
+            {% for category,picture,red_slika in data %}
+                {% if  i == red_slika   %}
+                        <div class="contains-image">
+                                <div class="caption">{{ category.naziv }}</div>
+                                <label>
+                                    <input type="radio"  value="{{category.naziv}}" class="dugmici" name="dugmad">
+                                    <img src="data:image/jpeg;base64,{{picture}}" alt="{{ category.naziv }}">
+                                </label>
+                        </div>
+                {% endif %}
+
+            {% endfor %}
+            </div>
+
+        {% endfor %}
+
 
 <div class="flex-container-Petar-biranje-broja-pitanja">
     <h3> Unesite broj pitanja na testu</h3>
-    <input type="number" min="5" max="15" placeholder="10">
+    <input type="number" min="5" max="15" placeholder="10" value="10" name="broj_pitanja">
 
-    <a href="test_singleplayer.html">Radi test</a>
+     <button type="button" style="padding: 30px;margin-left:80px;margin-top:30px;
+     font-size: 30px;
+    background-color: rgb(133, 86, 158);
+    border-radius: 15%;
+    border-width: 7px;
+    border-color: white;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: x-large;" onclick="submitForm()">Radi test</button>
 
 
 </div>
 
+</form>
+
+<script>
+    function submitForm() {
+
+    var radioButtons = document.querySelectorAll('input[name="dugmad"]');
+    var izabrano=false;
+    radioButtons.forEach(function(radioButton) {
+        // Proveravamo da li je trenutni radio dugme označeno
+        if (radioButton.checked) {
+            izabrano=true;
+
+            var broj_dugme = document.getElementsByName('broj_pitanja');
+
+            var vrednost = broj_dugme[0].value;
+            if(/^\d\d?$/.test(vrednost)==false)
+            {
+                    vrednost=10;
+                    var broj_string = "" + vrednost;
+                    broj_dugme[0].value=broj_string;
+                    alert("Posto se upisali los broj pitanja (manje od 5,veće od 15 ili nije ceo broj, vaš broj pitanja je izabran da bude 10!");
+            }
+            else
+            {
+                vrednost = parseInt(vrednost);
+                if (vrednost<5 || vrednost>15)
+                {
+                    vrednost=10;
+                    var broj_string = "" + vrednost;
+                    broj_dugme[0].value=broj_string;
+                    alert("Posto se upisali los broj pitanja (manje od 5,veće od 15 ili nije ceo broj, vaš broj pitanja je izabran da bude 10!");
+                }
+            }
 
 
+
+            document.getElementById('radi_test').submit();
+        }
+    });
+    if (izabrano==false)
+    {
+        alert("Niste izabrali nijednu kategoriju");
+    }
+
+
+}
+
+
+</script>
 
 </body>
 </html>

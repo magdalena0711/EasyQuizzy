@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "EasyQuizzy.apps.EasyquizzyConfig"
+    "EasyQuizzy.apps.EasyquizzyConfig",
+    "django.contrib.admindocs"
 ]
 
 MIDDLEWARE = [

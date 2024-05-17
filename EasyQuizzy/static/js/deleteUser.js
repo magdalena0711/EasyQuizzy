@@ -134,6 +134,7 @@ $(document).ready(function(){
             successfulRequest(msg);
             return;
         }
+        
 
         $.ajax({
             url: '/easyquizzy/addModerator',

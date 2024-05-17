@@ -1,4 +1,5 @@
 <!--Petar Milojević 2021/0336-->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +8,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="question_grading_style.css">
+    <link rel="stylesheet" href="{%  static 'css/question_grading_style.css' %}">
     <meta charset="UTF-8">
     <title>Ocenjivanje pitanja</title>
+        <script type="text/javascript">
+        window.history.forward();
+        function noBack() {
+            window.history.forward();
+        }
+    </script>
 </head>
 
 
     <body>
-        
+    <form action="grading_continue" id="oceni_pitanje" method="post">
+        {% csrf_token %}
         <div class="container">
 
           
@@ -37,9 +45,9 @@
               
                 <div class="col-sm-12">
                 <p>
-                    Tekst pitanja koje se ocenjuje!
+                    {{ question_text_content }}
                 </p>
-            </div>
+                </div>
             </div>
 
             
@@ -53,40 +61,76 @@
                 <div class="radio-buttons col-sm-12">
 
                    
-                        <input type="radio" name="dugmad" id="radio1">
+                        <input type="radio" name="dugmad" id="radio1" value="preskoci">
                         <label for="radio1">
                             Preskoci ocenjivanje
                         </label>
                     
                     <label>
-                        <input type="radio" name="dugmad">
+                        <input type="radio" name="dugmad" value="1">
                         1
                     </label>
                     <label>
-                        <input type="radio" name="dugmad">
+                        <input type="radio" name="dugmad" value="2">
                         2
                     </label>
                     <label>
-                        <input type="radio" name="dugmad">
+                        <input type="radio" name="dugmad" value="3">
                         3
                     </label>
                     <label>
-                        <input type="radio" name="dugmad">
+                        <input type="radio" name="dugmad" value="4">
                         4
                     </label>
                     <label>
-                        <input type="radio" name="dugmad">
+                        <input type="radio" name="dugmad" value="5">
                         5
                     </label>
                 </div>
                 
-                <div class="col-sm-12 linkic"><a href="test_finished_singleplayer.html" >Zavrsi ocenjivanje</a></div>
+                <div class="col-sm-12 linkic">
+                         <button type="button" style="padding: 30px;margin-left:80px;margin-top:30px;
+                         font-size: 30px;
+                        background-color: rgb(133, 86, 158);
+                        border-radius: 15%;
+                        border-width: 7px;
+                        border-color: white;
+                        color: white;
+                        text-align: center;
+                        text-transform: uppercase;
+                        font-size: x-large;
+                    " onclick="submitForm()">Zavrsi ocenjivanje</button>
+                </div>
               </div>
        
         
          
 
         </div>
+
+</form>
+
+    <script>
+    function submitForm() {
+
+    var radioButtons = document.querySelectorAll('input[name="dugmad"]');
+    var izabrano=false;
+    radioButtons.forEach(function(radioButton) {
+        // Proveravamo da li je trenutni radio dugme označeno
+        if (radioButton.checked) {
+            izabrano=true;
+            document.getElementById('oceni_pitanje').submit();
+        }
+    });
+    if (izabrano==false)
+    {
+        alert("Niste izabrali nijednu opciju za ocenjivanje!");
+    }
+
+
+}
+</script>
+
 
 
     </body>
