@@ -8,6 +8,7 @@ class Player(AsyncJsonWebsocketConsumer):
       async def connect(self):
             print('connected')
             self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+            print(self.room_name)
             self.room_group_name = "chat_%s" % self.room_name
 
             # Join room group
@@ -21,8 +22,9 @@ class Player(AsyncJsonWebsocketConsumer):
             if text_data == 'PING':
                 await self.send('PONG')
 
-      def disconnect(self, close_code):
+      async def disconnect(self, close_code):
         # Leave room group
-        async_to_sync(self.channel_layer.group_discard)(
+        self.channel_layer.group_discard(
             self.room_group_name, self.channel_name
         )
+        
