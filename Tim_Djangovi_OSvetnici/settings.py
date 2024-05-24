@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-c+l-sx1fy-0o&7@#b!9$p5ni1jk__-i-fbecom^dcs902&y_bd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+DEFAULT_CHARSET = 'utf-8'
 
 
 # Application definition
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "EasyQuizzy.apps.EasyquizzyConfig",
-    "django.contrib.admindocs"
+    "django.contrib.admindocs",
+    "django_redis"
 ]
 
 MIDDLEWARE = [
@@ -84,6 +86,15 @@ CHANNEL_LAYERS = {
     },
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -95,7 +106,10 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': os.environ.get('PASSWORD'),
         'HOST': '127.0.0.1',
-        'PORT': os.environ.get('PORT_MYSQL')
+        'PORT': os.environ.get('PORT_MYSQL'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',  # Postavljanje UTF-8 kodiranja
+        }
     }
 }
 

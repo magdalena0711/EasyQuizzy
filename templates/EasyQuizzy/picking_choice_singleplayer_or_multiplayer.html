@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static  'js/multiplayer.js' %}"></script>
     <link rel="stylesheet" href="{% static  'css/picking_category_style.css' %}">
     <link rel="stylesheet" href="{% static  'css/picking_choice_singleplayer_or_multiplaayer.css' %}">
     <meta charset="UTF-8">
@@ -19,81 +20,57 @@
     <h1> Izaberite tip igre</h1>
 </div>
 
+<div class="container">
+    <div class="row">
 
-<form action="picking_category_number_of_questions_singleplayer" id="nastavi_dalje" method="post">
-    {% csrf_token %}
-<div class="flex-container-Petar">
+        <div class="col-sm-6">
+            <form action="picking_category_number_of_questions_singleplayer" id="nastavi_dalje" method="post">
+                {% csrf_token %}
+                <div class="flex-container-Petar">
 
 
-        <div class="contains-image">
-            <div class="caption">Singleplayer</div>
-            <label>
-                <input type="radio" name="test" id="izbor_single" value="small_single" class="dugmici" >
-                <img src="{% static 'css/avatar_singleplayer_bela_pozadina.jpg' %}" style="margin:0px" alt="Avatar Singleplayer" >
-            </label>
+                        <div class="contains-image">
+                            <div class="caption">Singleplayer</div>
+                            <label>
+                                <input type="radio" name="test" id="izbor_single" value="small_single" class="dugmici" onclick="submitForm()">
+                                <img src="{% static 'css/avatar_singleplayer_bela_pozadina.jpg' %}" style="margin:0px" alt="Avatar Singleplayer" >
+                            </label>
+                        </div>
+
+
+                </div>
+            </form>
         </div>
-        <div class="contains-image">
-            <div class="caption">Multiplayer</div>
-            <label>
-                <input type="radio" name="test" id="izbor_multi" value="small_multi" class="dugmici" >
-                <img src="{% static 'css/avatar_singleplayer_bela_pozadina.jpg' %}" style="margin:0px"  alt="Avatar Multiplayer" >
-            </label>
+
+        <div class="col-sm-6">
+            <form action="/easyquizzy/finding/" id="multiUpdate" method="post">
+                {% csrf_token %}
+                <div class="flex-container-Petar">
+                    <div class="contains-image">
+                            <div class="caption">Multiplayer</div>
+                            <label>
+                                <input type="radio" name="test" id="izbor_multi" value="small_multi" class="dugmici" >
+                                <img src="{% static 'css/avatar_singleplayer_bela_pozadina.jpg' %}" style="margin:0px"  alt="Avatar Multiplayer" >
+                            </label>
+                    </div>
+                </div>
+                <div id="roomCode">
+                    <label>Unesite kod za igru: </label>
+                    <input type="text" id="code">
+                     <button type="submit" >Nastavi dalje</button>
+                </div>
+            </form>
         </div>
 
+    </div>
 </div>
 
-<div class="flex-container-Petar-biranje-broja-pitanja">
 
-
-
-    <button type="button" style="padding: 30px;margin-left:80px;font-size: 30px;
-    background-color: rgb(133, 86, 158);
-    border-radius: 15%;
-    border-width: 7px;
-    border-color: white;
-    color: white;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: x-large;
-" onclick="submitForm()">Nastavi dalje</button>
-
-
-
-</div>
-
-</form>
-
-<div>
-    <form action="/easyquizzy/finding/" id="multiUpdate">
-        <button type="submit">Multi</button>
-    </form>
-    
-</div>
-
-<script>
-    function submitForm() {
-        var single_izbor = document.getElementById('izbor_single').checked;
-        var multi_izbor = document.getElementById('izbor_multi').checked;
-        if(!single_izbor && !multi_izbor)
-        {
-            alert("Niste izabrali nijednu opciju,pa ne mozete dalje!");
-        }else
-        {
-            document.getElementById('nastavi_dalje').submit();
-        }
-    }
-
-
-
-    let form = document.getElementById("multiUpdate");
-    form.onsubmit = function(event){
-        let roomName = parseInt(Math.floor(Math.random()*100));
-        this.action = "finding/" + 1 + "/";
-        console.log(this.action);
-        this.submit();
-    }
-
-</script>
+{#<div class="flex-container-Petar-biranje-broja-pitanja">#}
+{##}
+{##}
+{##}
+{#</div>#}
 
 
 </body>

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from . import views_guest_and_reg, views_administrator, viewsPetar, viewsIlija, views
+from . import views_guest_and_reg, views_administrator, viewsPetar, viewsIlija, views, views_multiplayer
 
 urlpatterns = [
     path('users', views_administrator.show_users, name='show_users'),
@@ -44,5 +44,6 @@ urlpatterns = [
     path('grading', viewsIlija.load_grading, name='load_grading'),
     path('fifty_fifty', viewsIlija.fifty_fifty, name='fifty_fifty'),
     path('new_question', viewsIlija.replace, name='replace'),
-    path('finding/<str:room_name>/', views.find, name='find')
+    path('finding/<str:room_name>/', views.find, name='find'),
+    path('nextMultiplayer/<str:room_name>/', views_multiplayer.next_question, name='next_multiplayer'),
 ]

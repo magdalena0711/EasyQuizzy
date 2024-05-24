@@ -4,3 +4,4 @@ mysqlclient
 channels-redis
 daphne
 docutils
+django-redis
