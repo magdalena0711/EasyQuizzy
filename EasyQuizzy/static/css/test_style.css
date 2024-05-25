@@ -76,3 +76,9 @@ td > .btn {
 .temp {
     margin-top: 3%;
 }
+
+.icons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -21,9 +21,9 @@
 </div>
 
 <div class="container">
-    <div class="row">
+    <div class="row mt-5">
 
-        <div class="col-sm-6">
+        <div class="col-sm-6 mt-5">
             <form action="picking_category_number_of_questions_singleplayer" id="nastavi_dalje" method="post">
                 {% csrf_token %}
                 <div class="flex-container-Petar">
@@ -42,7 +42,7 @@
             </form>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-6 mt-5">
             <form action="/easyquizzy/finding/" id="multiUpdate" method="post">
                 {% csrf_token %}
                 <div class="flex-container-Petar">
@@ -50,14 +50,18 @@
                             <div class="caption">Multiplayer</div>
                             <label>
                                 <input type="radio" name="test" id="izbor_multi" value="small_multi" class="dugmici" >
-                                <img src="{% static 'css/avatar_singleplayer_bela_pozadina.jpg' %}" style="margin:0px"  alt="Avatar Multiplayer" >
+                                <div style="display: grid; place-items: center; background-color: white; border-radius: 12px; padding: 20px; width: 200px; height: 200px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                                    </svg>
+                                </div>
                             </label>
                     </div>
                 </div>
-                <div id="roomCode">
-                    <label>Unesite kod za igru: </label>
-                    <input type="text" id="code">
-                     <button type="submit" >Nastavi dalje</button>
+                <div id="roomCode" class="alert alert-dark text-center mt-3">
+                    <label class="font-italic">Unesite kod za igru: </label> <br>
+                    <input type="text" id="code" class="mt-3"> <br>
+                     <button type="submit" class="mt-3 btn btn-dark">Nastavi dalje</button>
                 </div>
             </form>
         </div>

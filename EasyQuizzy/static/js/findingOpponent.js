@@ -15,7 +15,7 @@ $(document).ready(function(){
 
 
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
-    const korIme = " " + $("#kor").text();
+    const korIme = $("#kor").text();
     console.log(roomName)
     console.log(korIme)
     const socket = new WebSocket(
@@ -28,6 +28,7 @@ $(document).ready(function(){
     localStorage.setItem("roomName", roomName);
     socket.onopen = function(event) {
         console.log('WebSocket connection established.');
+        socket.send(korIme);
     }
 
 
@@ -35,13 +36,19 @@ $(document).ready(function(){
 
     form.submit(function(event){
         this.action = "/easyquizzy/nextMultiplayer/" + roomName + "/";
-        alert(this.action);
-
         this.submit();
     });
 
     socket.onmessage = function(event){
-        const data = event.data;
+        const data = JSON.parse(event.data);
+        
+        let username1 = data['first'];
+        let username2 = data['second'];
+        if (username1 != korIme){
+            localStorage.setItem("drugi", username1);
+        }else{
+            localStorage.setItem("drugi", username2);
+        }
         console.log(roomName);
         $("#nextPageMulti").click();
 

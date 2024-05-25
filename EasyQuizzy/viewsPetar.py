@@ -7,6 +7,7 @@ import base64
 import random
 import math
 from django.forms.models import model_to_dict
+from .views_guest_and_reg import *
 
 category=""
 number_questions_chosen=0 #Sluzi kao brojac koliko smo ukupno pitanja izabrali
@@ -365,7 +366,7 @@ def test_end(request):
 
         data = list(zip(categories, images, list_images))
 
-        return render(request, 'EasyQuizzy/picking_category_number_of_questions_singleplayer.html',{'data':data,'range':range(length_range)})
+        return render(request, 'EasyQuizzy/picking_choice_singleplayer_or_multiplayer.html',{'data':data,'range':range(length_range)})
 
 
 
@@ -374,9 +375,13 @@ def test_end(request):
         # Kod koji se izvršava ako je kliknuta dugme da se vrati na pocetni meni
         #Videti kako cemo u zavisnosti od toga koji je role korisnika
 
-        role_user =request.session['role_user']
-        if (role_user!="guest"):
-            IdKor_current =request.session['IdKor_current']
+        # userName = request.POST['myUsername']
+        # role_user = myRole(userName)
+
+        
+
+        # if (role_user!="guest"):
+        #     IdKor_current =request.session['IdKor_current']
 
 
 

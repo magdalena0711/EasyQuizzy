@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static  'js/testMultiplayer.js' %}"></script>
     <link rel="stylesheet" href="{% static  'css/test_style.css' %}">
-    <title>TestSingleplayer</title>
+    <title>TestMultiplayer</title>
     <script type="text/javascript">
         window.history.forward();
         function noBack() {
@@ -18,72 +18,98 @@
     </script>
 </head>
 <body onload="disable()">
-    <div class="header">
-        <label  id="kor">&nbsp {{ korIme }}</label>
+    <div class="header" style="display: none">
+        <label  id="kor">{{ korIme }}</label>
     </div>
 
 
 
     <div class="container">
+        <div class="row mt-5">
+            <div class="col-sm-6 mt-5" style="display: grid; place-items: center;">
+                <div class="card icons" style="width: 18rem; display: flex; align-items: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="brown" class="bi bi-person" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" fill="orange"/>
+                    </svg>
+                    <div class="card-body">
+                      <label id="myInfo"></label> <br>
+                      <label id="myPoints">0</label>
+                    </div>
+                  </div>
+            </div>
 
-    <form action="answered" id="answer_form" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="question_text" value="{{ question_text_content }}">
-        <h1>Pitanje {{ number_current_question }}</h1>
-        <label class="question">{{ question_text_content }}</label>
-
-        <input type="hidden" name="answer_text0" value="{{ correct_incorrect_data.0.0 }}">
-        <input type="hidden" name="answer_text1" value="{{ correct_incorrect_data.1.0 }}">
-        <input type="hidden" name="answer_text2" value="{{ correct_incorrect_data.2.0 }}">
-        <input type="hidden" name="answer_text3" value="{{ correct_incorrect_data.3.0 }}">
-
-        <input type="hidden" name="answer_choice" id="answer_choice" value="4">
-        <div class="row answers">
-            <table>
-                <tr>
-                    <td>
-                        <input value="{{ correct_incorrect_data.0.0 }}" name="answer0" id="answer0"  type="button" class="col-sm-6 btn btn-primary answerClick">
-                    </td>
-                    <td>
-                        <input value="{{ correct_incorrect_data.1.0 }}" name="answer1" id="answer1" type="button" class="col-sm-6 btn btn-primary answerClick">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input value="{{ correct_incorrect_data.2.0 }}" name="answer2" id="answer2"  type="button" class="col-sm-6 btn btn-primary answerClick">
-                    </td>
-                    <td>
-                        <input value="{{ correct_incorrect_data.3.0 }}" name="answer3" id="answer3"  type="button" class="col-sm-6 btn btn-primary answerClick">
-                    </td>
-                </tr>
-            </table>
+            <div class="col-sm-6 mt-5" style="display: grid; place-items: center;">
+                <div class="card icons" style="width: 18rem; display: flex; align-self: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="brown" class="bi bi-person" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" fill="green"/>
+                    </svg>
+                    <div class="card-body">
+                      <label id="otherInfo"></label><br>
+                      <label id="otherPoints">0</label>
+                    </div>
+                  </div>
+            </div>
         </div>
-    </form>
+    
+        
 
-        <!--<label class="remaining">10</label>-->
+        <form action="answered" id="answer_form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="question_text" value="{{ question_text_content }}">
+            <h1 id = "indexQuestion">Pitanje {{ number_current_question }}</h1>
+            <label class="question" id = "questionText">{{ question_text_content }}</label>
 
-        <div class="row hints">
-            {% if half_half_used %}
-                <input value="Pola-pola" id="fifty_fifty" type="button" onclick="fifty_fifty()" class="btn btn-primary disabled">
-            {% else %}
-                <input value="Pola-pola" id="fifty_fifty" type="button" onclick="fifty_fifty()" class="btn btn-primary">
-            {% endif %}
+            <input type="hidden" name="answer_text0" value="{{ correct_incorrect_data.0.0 }}">
+            <input type="hidden" name="answer_text1" value="{{ correct_incorrect_data.1.0 }}">
+            <input type="hidden" name="answer_text2" value="{{ correct_incorrect_data.2.0 }}">
+            <input type="hidden" name="answer_text3" value="{{ correct_incorrect_data.3.0 }}">
 
-            {% if replacement_question_used %}
-                <a href="new_question" id="replace_question" type="button" class="btn btn-primary disabled">Zamena pitanja</a>
-            {% else %}
+            <input type="hidden" name="answer_choice" id="answer_choice" value="4">
+            <div class="row answers">
+                <table id = "tableAnswer">
+                    <tr>
+                        <td>
+                            <input value="{{ correct_incorrect_data.0.0 }}" name="answer0" id="answer0"  type="button" class="col-sm-6 btn btn-primary answerClick">
+                        </td>
+                        <td>
+                            <input value="{{ correct_incorrect_data.1.0 }}" name="answer1" id="answer1" type="button" class="col-sm-6 btn btn-primary answerClick">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input value="{{ correct_incorrect_data.2.0 }}" name="answer2" id="answer2"  type="button" class="col-sm-6 btn btn-primary answerClick">
+                        </td>
+                        <td>
+                            <input value="{{ correct_incorrect_data.3.0 }}" name="answer3" id="answer3"  type="button" class="col-sm-6 btn btn-primary answerClick">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+
+            <!--<label class="remaining">10</label>-->
+
+            <div class="row hints">
+                
+                <input value="Pola-pola" id="fifty_fifty" type="button"  class="btn btn-primary">
+            
                 <a href="new_question" id="replace_question" type="button" class="btn btn-primary">Zamena pitanja</a>
-            {% endif %}
-        </div>
+                
+            </div>
 
-    <form action="fifty_fifty" id="fifty_fifty_form" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="question_text" value="{{ question_text_content }}">
-        <input type="hidden" name="answer_text0" value="{{ correct_incorrect_data.0.0 }}">
-        <input type="hidden" name="answer_text1" value="{{ correct_incorrect_data.1.0 }}">
-        <input type="hidden" name="answer_text2" value="{{ correct_incorrect_data.2.0 }}">
-        <input type="hidden" name="answer_text3" value="{{ correct_incorrect_data.3.0 }}">
-    </form>
+        <!-- <form action="fifty_fifty" id="fifty_fifty_form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="question_text" value="{{ question_text_content }}">
+            <input type="hidden" name="answer_text0" value="{{ correct_incorrect_data.0.0 }}">
+            <input type="hidden" name="answer_text1" value="{{ correct_incorrect_data.1.0 }}">
+            <input type="hidden" name="answer_text2" value="{{ correct_incorrect_data.2.0 }}">
+            <input type="hidden" name="answer_text3" value="{{ correct_incorrect_data.3.0 }}">
+        </form> -->
+
+        <form action="/easyquizzy/doneMultiplayer" method="post" id="doneForm">
+            {% csrf_token %}
+            <input type="text" name="points" id="inputPoints">
+        </form>
 
     </div>
 
