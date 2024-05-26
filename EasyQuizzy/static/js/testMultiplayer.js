@@ -40,7 +40,7 @@ $(document).ready(function(){
     }
 
     $(".answerClick").click(function(){
-        
+        console.log(answered);
         if (answered == true) return;
         
         answered = true;
@@ -174,6 +174,7 @@ $(document).ready(function(){
 
 
         }else{
+            answered = false;
             console.log('zamena');
             if (replaced == true){
                 $("#replace_question").attr("disabled", true);

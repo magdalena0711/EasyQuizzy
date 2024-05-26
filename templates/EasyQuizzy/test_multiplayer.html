@@ -17,7 +17,7 @@
         }
     </script>
 </head>
-<body onload="disable()">
+<body>
     <div class="header" style="display: none">
         <label  id="kor">{{ korIme }}</label>
     </div>
@@ -97,14 +97,6 @@
                 
             </div>
 
-        <!-- <form action="fifty_fifty" id="fifty_fifty_form" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="question_text" value="{{ question_text_content }}">
-            <input type="hidden" name="answer_text0" value="{{ correct_incorrect_data.0.0 }}">
-            <input type="hidden" name="answer_text1" value="{{ correct_incorrect_data.1.0 }}">
-            <input type="hidden" name="answer_text2" value="{{ correct_incorrect_data.2.0 }}">
-            <input type="hidden" name="answer_text3" value="{{ correct_incorrect_data.3.0 }}">
-        </form> -->
 
         <form action="/easyquizzy/doneMultiplayer" method="post" id="doneForm">
             {% csrf_token %}
@@ -114,29 +106,7 @@
     </div>
 
 
-<script>
-    function answer(choice) {
-        document.getElementById("answer_choice").value = choice.toString();
-        document.getElementById("answer_form").submit();
-    }
 
-    function fifty_fifty() {
-        document.getElementById("fifty_fifty_form").submit();
-    }
-
-    function disable() {
-        if ("{{ disabled.0 }}" != 4) {
-            let answer1 = document.getElementById("answer" + "{{ disabled.0 }}");
-            let answer2 = document.getElementById("answer" + "{{ disabled.1 }}");
-            answer1.classList.add("disabled");
-            answer1.classList.remove("btn-primary");
-            answer1.classList.add("btn-danger");
-            answer2.classList.add("disabled");
-            answer2.classList.remove("btn-primary");
-            answer2.classList.add("btn-danger");
-        }
-    }
-</script>
 
 </body>
 </html>
