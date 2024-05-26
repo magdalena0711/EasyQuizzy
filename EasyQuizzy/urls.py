@@ -48,5 +48,5 @@ urlpatterns = [
     path('nextMultiplayer/<str:room_name>/', views_multiplayer.next_question, name='next_multiplayer'),
     path('jumpNext', views_multiplayer.jump_next, name="jump_next"),
     path('doneMultiplayer', views_multiplayer.done_multiplayer, name="done_multiplayer"),
-    path('getCorrect', views_multiplayer.get_correct, name="get_correct")
+    path('getCorrect', views_multiplayer.get_correct, name="get_correct"),
 ]

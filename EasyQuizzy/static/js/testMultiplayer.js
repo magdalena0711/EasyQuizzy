@@ -19,6 +19,7 @@ $(document).ready(function(){
 
     let socket = null;
     let answered = false;
+    let replaced = false;
     let disabledAnswers = []
     $("#doneForm").css("display", "none");
     let username = $("#kor").text();
@@ -57,49 +58,9 @@ $(document).ready(function(){
 
         socket.onmessage = function(event){
             const data = JSON.parse(event.data)
-            $("#myPoints").text(data[username][1])
-            $("#otherPoints").text(data[otherUsername][1])
-            let table = $("#tableAnswer");
-            let trs = table.find("tr");
-            let startIndex = 0;
-            trs.each(function(index){
-                let tds = $(this).find("td");
-                startIndex = index;
-                tds.each(function(index){
-                    let btnIndex = startIndex * 2 + index;
-                    console.log(btnIndex);
-                    let btn = $("#answer"+btnIndex);
-                    if (btn.val() == data[username][2]){
-                        btn.css({
-                            "background-color": "green"
-                        })
-                    }
-                    if (btn.val() == data[username][0] && btn.val() == data[otherUsername][0] && btn.val() != data[username][2]){
-                        btn.css({
-                            "background-image": "linear-gradient(to right, yellow 50%, black 50%"
-                        })
-                        
-                    }else{
-                        if (btn.val() == data[username][0] && btn.val() != data[username][2]){
-                            btn.css({
-                                'background-color': 'yellow'
-                        });
-                        }
-                        if (btn.val() == data[otherUsername][0] && btn.val() != data[username][2]){
-                            btn.css({
-                                
-                                'background-color': 'black'
-                        });
-                        }
-                    }
-                    
-                
-                    
-                })
-                
-            })
-
-            setTimeout(function(){
+            if(username in data){
+                $("#myPoints").text(data[username][1])
+                $("#otherPoints").text(data[otherUsername][1])
                 let table = $("#tableAnswer");
                 let trs = table.find("tr");
                 let startIndex = 0;
@@ -108,65 +69,128 @@ $(document).ready(function(){
                     startIndex = index;
                     tds.each(function(index){
                         let btnIndex = startIndex * 2 + index;
-                        $("#answer"+btnIndex).css("background-image", "none").css('background-color', "#0d6efd");
+                        console.log(btnIndex);
+                        let btn = $("#answer"+btnIndex);
+                        if (btn.val() == data[username][2]){
+                            btn.css({
+                                "background-color": "green"
+                            })
+                        }
+                        if (btn.val() == data[username][0] && btn.val() == data[otherUsername][0] && btn.val() != data[username][2]){
+                            btn.css({
+                                "background-image": "linear-gradient(to right, yellow 50%, black 50%"
+                            })
+                            
+                        }else{
+                            if (btn.val() == data[username][0] && btn.val() != data[username][2]){
+                                btn.css({
+                                    'background-color': 'yellow'
+                            });
+                            }
+                            if (btn.val() == data[otherUsername][0] && btn.val() != data[username][2]){
+                                btn.css({
+                                    
+                                    'background-color': 'black'
+                            });
+                            }
+                        }
+                        
+                    
+                        
+                    })
+                    
+                })
+
+                setTimeout(function(){
+                    let table = $("#tableAnswer");
+                    let trs = table.find("tr");
+                    let startIndex = 0;
+                    trs.each(function(index){
+                        let tds = $(this).find("td");
+                        startIndex = index;
+                        tds.each(function(index){
+                            let btnIndex = startIndex * 2 + index;
+                            $("#answer"+btnIndex).css("background-image", "none").css('background-color', "#0d6efd");
+                            
+                        })
+        
+                    })
+                    answered = false;
+                    console.log(disabledAnswers.length);
+                    console.log(disabledAnswers);
+                    if (disabledAnswers.length > 0){
+                        for(let i = 0; i < disabledAnswers.length; i++){
+                            
+                            $("#answer"+disabledAnswers[i]).attr("disabled", false);
+                            
+                        }
+                        disabledAnswers = [];
+                    }
+                    $.ajax({
+                        url: '/easyquizzy/jumpNext',
+                        method: 'POST',
+                        headers:{
+                            "X-CSRFToken": csrftoken,
+                            "Content-Type": "application/json"
+                        },
+                        data: {'room_name': roomName},
+                        success: function(response){
+                            if (response['done'] == false){
+                                $("#indexQuestion").text("Pitanje " + response['current_number']);
+                                $("#questionText").text(response['question']);
+                                let table = $("#tableAnswer");
+                                let trs = table.find("tr");
+                                let startIndex = 0;
+                                console.log(response['answers'])
+                                trs.each(function(index){
+                                    let tds = $(this).find("td");
+                                    startIndex = index;
+                                    tds.each(function(index){
+                                        let btnIndex = startIndex * 2 + index;
+                                        $("#answer"+btnIndex).val(response['answers'][btnIndex]);
+                                        $("#answer"+btnIndex).css('background-color', "#0d6efd")
+                                        
+                                    })
+                    
+                                })
+    
+                            }else{
+                                localStorage.setItem("prvi", username);
+                                localStorage.setItem("myPoints", $("#myPoints").text());
+                                localStorage.setItem("otherPoints", $("#otherPoints").text());
+                                $("#inputPoints").val($("#myPoints").text())
+                                $("#doneForm").submit();
+                            }
+    
+                        }
+                    })
+                }, 2000)
+    
+    
+            }else{
+                if (replace == true){
+                    $("#replace_question").attr("disabled", true);
+                }
+                $("#questionText").text(data['question']);
+                let table = $("#tableAnswer");
+                let trs = table.find("tr");
+                let startIndex = 0;
+                console.log(data['answers'])
+                trs.each(function(index){
+                    let tds = $(this).find("td");
+                    startIndex = index;
+                    tds.each(function(index){
+                        let btnIndex = startIndex * 2 + index;
+                        $("#answer"+btnIndex).val(data['answers'][btnIndex]);
+                        $("#answer"+btnIndex).css('background-color', "#0d6efd")
                         
                     })
     
                 })
-                answered = false;
-                console.log(disabledAnswers.length);
-                console.log(disabledAnswers);
-                if (disabledAnswers.length > 0){
-                    for(let i = 0; i < disabledAnswers.length; i++){
-                        
-                        $("#answer"+disabledAnswers[i]).attr("disabled", false);
-                        
-                    }
-                    disabledAnswers = [];
-                }
-                $.ajax({
-                    url: '/easyquizzy/jumpNext',
-                    method: 'POST',
-                    headers:{
-                        "X-CSRFToken": csrftoken,
-                        "Content-Type": "application/json"
-                    },
-                    data: {'room_name': roomName},
-                    success: function(response){
-                        if (response['done'] == false){
-                            $("#indexQuestion").text("Pitanje " + response['current_number']);
-                            $("#questionText").text(response['question']);
-                            let table = $("#tableAnswer");
-                            let trs = table.find("tr");
-                            let startIndex = 0;
-                            console.log(response['answers'])
-                            trs.each(function(index){
-                                let tds = $(this).find("td");
-                                startIndex = index;
-                                tds.each(function(index){
-                                    let btnIndex = startIndex * 2 + index;
-                                    $("#answer"+btnIndex).val(response['answers'][btnIndex]);
-                                    $("#answer"+btnIndex).css('background-color', "#0d6efd")
-                                    
-                                })
-                
-                            })
-
-                        }else{
-                            localStorage.setItem("prvi", username);
-                            localStorage.setItem("myPoints", $("#myPoints").text());
-                            localStorage.setItem("otherPoints", $("#otherPoints").text());
-                            $("#inputPoints").val($("#myPoints").text())
-                            $("#doneForm").submit();
-                        }
-
-                    }
-                })
-            }, 2000)
-
-
-
-
+                alert('Pitanje je zamenjeno!');
+            }
+  
+            
             
         }
         
@@ -200,6 +224,12 @@ $(document).ready(function(){
             }
         })
     });
+
+    $("#replace_question").click(function(){
+        if (answered == true) return;
+        replace = true;
+        socket.send("replace");
+    })
 
     
 

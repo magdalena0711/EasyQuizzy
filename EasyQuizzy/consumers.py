@@ -110,11 +110,54 @@ class PlayerGame(AsyncJsonWebsocketConsumer):
         #print(redis_conn.hlen(self.room_group_name))
     
         await self.send(json.dumps(sending_dict))
+    
+    async def replace_question(self, event):
+        exchange_question = self.room_name + "replace"
+        redis_conn = get_redis_connection("default")
+        num = list(redis_conn.smembers(exchange_question))[0]
+        num = int(num.decode('utf-8'))
+        questions_dict = json.loads(redis_conn.hget(self.room_name, "questions"))
+        questions = questions_dict['questions']
+        #print(current_number)
+        correct_incorrect_dict = json.loads(redis_conn.hget(self.room_name, "correct_incorrect_data"))
+        correct_incorrect_list = correct_incorrect_dict['answers']
+        answer_list = list()
+        for item in correct_incorrect_list[num]:
+            answer_list.append(item[0])
+        #print(answer_list)
+        return_dict = {'question': questions[num], 'answers': answer_list}
+
+        #brisanje ukoliko je neko odgovorio
+        room_group_name = 'quiz_' + self.room_name
+        allMembers = redis_conn.hgetall(room_group_name)
+        print(f'ALL MEMBERS{allMembers}')
+        for key, val in allMembers.items():
+            redis_conn.hdel(room_group_name, key.decode('utf-8'))
+        allMembers = redis_conn.hgetall(room_group_name)
+        print(f'DELETED {allMembers}')
+        print(f"AFTER {len(allMembers)}")
+        await self.send(json.dumps(return_dict))
+
         
 
     async def receive(self, text_data=None, bytes_data=None, **kwargs):
         redis_conn = get_redis_connection("default")
+        exchange_question = self.room_name + "replace"
         #print(text_data)
+        if text_data == "replace":
+            setNum = list(redis_conn.smembers(exchange_question))
+            print(f'setNum {setNum}')
+            num = int(setNum[0].decode('utf-8'))
+            redis_conn.srem(exchange_question, num)
+            num = num + 1
+            redis_conn.sadd(exchange_question, num)
+            await self.channel_layer.group_send(self.room_group_name,
+                        {
+                            "type": "replace.question",
+                            "message": 'replace'
+                        })
+            return
+
         
         myContent =  json.loads(text_data)
         print(myContent)

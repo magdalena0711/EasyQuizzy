@@ -26,7 +26,7 @@ def initialize():
     correct_incorrect_rows_table = [0, 1, 2, 3]
 
 
-    for i in range(11):
+    for i in range(12):
 
         questions.append(allQuestions[i].tekst_pitanja)
         answers.append([allQuestions[i].tacan_odgovor, allQuestions[i].netacan1, allQuestions[i].netacan2, allQuestions[i].netacan3])
@@ -50,6 +50,7 @@ def initialize():
 
 
 def next_question(request, room_name):
+    exchange_question = room_name + "replace"
     mutex.acquire()
     keySet = 'abc' + room_name + 'abc'
 
@@ -62,6 +63,7 @@ def next_question(request, room_name):
         current_number = current_number + 1
         redis_conn.hset(room_name, "current_number", current_number)
     else: 
+        redis_conn.sadd(exchange_question, 9)
         redis_conn.srem(keySet,current_number -1)
     
     mutex.release()
@@ -159,4 +161,6 @@ def get_correct(request):
     correct_answer_send = correct_answer(textQuestion)
 
     return JsonResponse({'correct': correct_answer_send})
+
+
 
