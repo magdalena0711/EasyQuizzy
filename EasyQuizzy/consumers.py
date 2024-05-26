@@ -136,6 +136,7 @@ class PlayerGame(AsyncJsonWebsocketConsumer):
         allMembers = redis_conn.hgetall(room_group_name)
         print(f'DELETED {allMembers}')
         print(f"AFTER {len(allMembers)}")
+        print(f'qu {questions[num]}, answers {answer_list}')
         await self.send(json.dumps(return_dict))
 
         

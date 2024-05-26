@@ -57,7 +57,9 @@ $(document).ready(function(){
         
 
         socket.onmessage = function(event){
-            const data = JSON.parse(event.data)
+            
+            const data = JSON.parse(event.data);
+            console.log(data);
             if(username in data){
                 $("#myPoints").text(data[username][1])
                 $("#otherPoints").text(data[otherUsername][1])
@@ -168,9 +170,11 @@ $(document).ready(function(){
     
     
             }else{
+                console.log('zamena');
                 if (replace == true){
                     $("#replace_question").attr("disabled", true);
                 }
+                console.log(data);
                 $("#questionText").text(data['question']);
                 let table = $("#tableAnswer");
                 let trs = table.find("tr");
