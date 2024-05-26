@@ -1,19 +1,8 @@
 
-// function loaded(){
-//     document.getElementById("formStart").addEventListener("submit", function(event){
-//         event.preventDefault();
-//         this.action = "nextMultiplayer/" + roomName + "/";
-//         alert(this.action);
-//         console.log(this.action);
-//
-//         this.submit();
-//     })
-// }
-
 
 $(document).ready(function(){
 
-
+    let searchTime = 1;
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
     const korIme = $("#kor").text();
     console.log(roomName)
@@ -53,6 +42,15 @@ $(document).ready(function(){
         $("#nextPageMulti").click();
 
     };
+
+    setInterval(function(){
+        console.log('usao');
+        searchTime += 1;
+        
+        $("#searchTime").text("Vreme pretrage: " + searchTime);
+    }, 1000);
+
+    
 
 
 });
