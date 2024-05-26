@@ -74,6 +74,7 @@ class Player(AsyncJsonWebsocketConsumer):
         # Leave room group
         redis_conn = get_redis_connection("default")
         redis_conn.srem(self.room_group_name, self.username)
+        print(redis_conn.smembers(self.room_group_name))
 
         self.channel_layer.group_discard(
             self.room_group_name, self.channel_name
@@ -116,28 +117,29 @@ class PlayerGame(AsyncJsonWebsocketConsumer):
         redis_conn = get_redis_connection("default")
         num = list(redis_conn.smembers(exchange_question))[0]
         num = int(num.decode('utf-8'))
+        print(f'NUM {num}')
         questions_dict = json.loads(redis_conn.hget(self.room_name, "questions"))
         questions = questions_dict['questions']
-        #print(current_number)
         correct_incorrect_dict = json.loads(redis_conn.hget(self.room_name, "correct_incorrect_data"))
         correct_incorrect_list = correct_incorrect_dict['answers']
         answer_list = list()
         for item in correct_incorrect_list[num]:
             answer_list.append(item[0])
-        #print(answer_list)
         return_dict = {'question': questions[num], 'answers': answer_list}
 
         #brisanje ukoliko je neko odgovorio
         room_group_name = 'quiz_' + self.room_name
         allMembers = redis_conn.hgetall(room_group_name)
         print(f'ALL MEMBERS{allMembers}')
-        for key, val in allMembers.items():
-            redis_conn.hdel(room_group_name, key.decode('utf-8'))
-        allMembers = redis_conn.hgetall(room_group_name)
-        print(f'DELETED {allMembers}')
-        print(f"AFTER {len(allMembers)}")
+        if len(allMembers) > 0:
+            for key, val in allMembers.items():
+                redis_conn.hdel(room_group_name, key.decode('utf-8'))
+            allMembers = redis_conn.hgetall(room_group_name)
+            print(f'DELETED {allMembers}')
+            print(f"AFTER {len(allMembers)}")
         print(f'qu {questions[num]}, answers {answer_list}')
         await self.send(json.dumps(return_dict))
+        print('SENT')
 
         
 
@@ -210,8 +212,14 @@ class PlayerGame(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # Leave room group
+        exchange_question = self.room_name + "replace"
         redis_conn = get_redis_connection("default")
-        redis_conn.srem(self.room_group_name, self.channel_name)
+        #redis_conn.srem(self.room_group_name, self.channel_name)
+        setNum = list(redis_conn.smembers(exchange_question))
+        if len(setNum) > 0:
+            num = int(setNum[0].decode('utf-8'))
+            redis_conn.srem(exchange_question, num)
+    
 
         self.channel_layer.group_discard(
             self.room_group_name, self.channel_name

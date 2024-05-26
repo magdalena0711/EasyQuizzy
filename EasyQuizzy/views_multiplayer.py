@@ -59,11 +59,12 @@ def next_question(request, room_name):
     current_number = int(redis_conn.hget(room_name,"current_number"))
     
     if (len(redis_conn.smembers(keySet)) == 0):
+        redis_conn.sadd(exchange_question, 9)
         redis_conn.sadd(keySet, current_number)
         current_number = current_number + 1
         redis_conn.hset(room_name, "current_number", current_number)
     else: 
-        redis_conn.sadd(exchange_question, 9)
+        
         redis_conn.srem(keySet,current_number -1)
     
     mutex.release()

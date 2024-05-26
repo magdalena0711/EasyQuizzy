@@ -10,29 +10,28 @@
     <script src="{% static  'js/findingOpponent.js' %}"></script>
 
     <meta charset="UTF-8">
-    <title>Traženje Protivnika</title>
+    
 </head>
 <body>
-    <div class="header">
+    <title class="mt-5">Traženje Protivnika</title>
+    <div class="header" style="display: none;">
         <label id="kor">{{ korIme }}</label>
     </div>
     <div class="container">
         <div class="row naslov">
-            <h1>Trazenje protivnika...</h1>
+            <h1>Traženje protivnika...</h1>
         </div>
         <div class="row">
             <span class="spinner-border"></span>
         </div>
         <div class="row vreme">
-            <div class="col-sm-12"><h4>Vreme pretrage: 12s</h4></div>
+            <div class="col-sm-12"><h4 id="searchTime">Vreme pretrage: 1</h4></div>
         </div>
 
         <div class="row dugme">
+            
             <div class="col-sm-12">
-                <a href="test_multiplayer.html" class="btn btn-primary">Pronadji protivnika *dugme za prototip*</a>
-            </div>
-            <div class="col-sm-12">
-                <a href="adminMainPage.html" class="btn btn-primary">Odustani od pretrage</a>
+                <a href="/easyquizzy/main" class="btn btn-primary">Odustani od pretrage</a>
             </div>
         </div>
     </div>

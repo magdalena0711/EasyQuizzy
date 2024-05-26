@@ -298,7 +298,7 @@ def loginUser(request):
 
         for user in registeredUsers:
 
-            if user.idkor.korisnicko_ime == korIme and user.idkor.lozinka == password:
+            if user.idkor.korisnicko_ime == korIme and user.idkor.lozinka == password and user.idkor.vazeci == 1:
                 # Ako je korisnik pronađen, prelazi na sledeću stranicu
                 context = {
                     'korisniko_ime': korIme,
@@ -325,7 +325,7 @@ def loginUser(request):
 
         for user in moderatorUsers:
 
-            if user.idkor.korisnicko_ime == korIme and user.idkor.lozinka == password:
+            if user.idkor.korisnicko_ime == korIme and user.idkor.lozinka == password and user.idkor.vazeci == 1:
                 # Ako je korisnik pronađen, prelazi na sledeću stranicu
                 context['korisnicko_ime']= korIme
 
@@ -338,7 +338,7 @@ def loginUser(request):
                 return redirect('main')
 
         for user in adminUsers:
-            if user.idkor.korisnicko_ime == korIme and user.idkor.lozinka == password:
+            if user.idkor.korisnicko_ime == korIme and user.idkor.lozinka == password and user.idkor.vazeci == 1:
                 # Ako je korisnik pronađen, prelazi na sledeću stranicu
                 context = {
                     'korisniko_ime': korIme,
@@ -464,9 +464,15 @@ def register(request):
             context['message'] = 'Korisničko ime je zauzeto!'
             return HttpResponse(template.render(context, request))
 
+        
         ime = request.POST.get('name')
         prezime = request.POST.get('surname')
         password = request.POST.get('password')
+        pass_check = request.POST.get('passwordVal')
+
+        if( password != pass_check):
+            context['message'] = 'Lozinke se ne poklapaju!'
+            return HttpResponse(template.render(context, request))
         email = request.POST.get('email')
         pol = request.POST.get('gender')
 
