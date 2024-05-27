@@ -1,13 +1,14 @@
-
+#Elena Savic 2021/0332
 
 from .models import *
 from django.template import loader
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import json
 import base64
 from . import views_guest_and_reg
 from . import stickers
+from django.contrib.auth.decorators import login_required
 
 '''
 funkcija koja vraća stikere za levi i desni navigacioni bar svake stranice za različite vrste korisnika
@@ -25,6 +26,7 @@ def get_stickers(request):
     elif my_role == 0:
         return stickers.leftRegistered, stickers.rightRegistered
     return stickers.leftGuest, stickers.rightGuest
+
 '''
 funkcija koja vraća listu koja sadrži sve korisnike
 svaki korisnik je predstavljen listom koja sadrži podatke o korisničkom imenu, imenu, prezimenu, email-u, polu i vrsti korisnika
@@ -55,10 +57,24 @@ def get_all_users():
 
     return all_users
 
-'''
-funkcija vraća stranicu koja izlistava sve korisnike
-'''
+
+@login_required(login_url='login')
 def show_users(request):
+    """
+    Prikazuje stranicu za brisanje korisnika i dodavanje moderatora; dodaje sve korisnike u tabelu.
+
+    **Context**
+    ''all_users''
+    Lista koja sadrži podatke o svim korisnicima
+    ''left''
+    Levi navigacioni bar za admina
+    ''right''
+    Desni navigacioni bar za admina
+    
+    **Template**
+    :template:'EasyQuizzy/add_delete_user.html'
+
+    """
 
     template = loader.get_template('EasyQuizzy/add_delete_user.html')
 
@@ -74,11 +90,21 @@ def show_users(request):
     return HttpResponse(template.render(context, request))
 
 
-'''
-funkcija obrađuje AJAX zahtev za brisanje korisnika
-proverava da li korisnik postoji i postavlja mu polje "vazeci" na 0
-'''
+
 def delete_user(request):
+    """
+    Obrađuje AJAX zahtev za brisanje korisnika.
+    Proverava da li korisnik postoji i postavlja mu polje 'vazeci' na 0
+
+    **Context**
+    ''message''
+    Poruka o stanju izvršenja zahteva
+    ''successfull''
+    Poruka o tome da li je AJAX zahtev uspešno obrađen
+
+    **Template**
+    Ne dolazi do promene html stranice
+    """
     data = request.body.decode()
     username = data.split("=")[1]
     user_list = Korisnik.objects.filter(korisnicko_ime = username).all()
@@ -98,7 +124,8 @@ def delete_user(request):
 
 '''
 funkcija vraća listu rečnika
-rečnik se sastoji od tri elementa, gde su ključevi imena kategorija, dok su vrednosti binarni prikazi slika
+rečnik se sastoji od tri elementa, radi boljeg formatiranja
+ključevi su imena kategorija, dok su vrednosti binarni prikazi slika
 '''
 def get_category_images():
     #uzimanje slika svih kategorija iz baze
@@ -129,11 +156,44 @@ def get_questions(question_status):
         questions[i+1] = permitted_questions[i]['tekst_pitanja']
     return questions
 
+'''
+funkcija vraća imena svih kategorija
+'''
+def get_category_names():
+    categories = Kategorija.objects.values('naziv').all()
+    category_list = list()
+    for i in range (len(categories)):
+        category_list.append(categories[i]['naziv'])
+    return category_list
 
-'''
-funkcija vraća stranicu za izmenu i dodavanje pitanja
-'''
+
+
+@login_required(login_url='login')
 def adding_questions(request):
+    """
+    Vraća stranicu za izmenu i dodavanje pitanja.
+
+    **Context**
+    'categories'
+    Slike svih kategorija koje su potrebne za izmenu pitanja
+    'permitted'
+    Rečnik odobrenih pitanja; ključ je redni broj pitanja, a vrednost tekst pitanja
+    'message'
+    Poruka o uspešnosti dodavanja novog pitanja
+    'messageChange'
+    Poruka o uspešnosti izmene pitanja
+    'messagePermitted'
+    Poruka o uspešnosti dodavanja odobrenog pitanja
+    ''left''
+    Levi navigacioni bar za admina ili moderatora
+    ''right''
+    Desni navigacioni bar za admina ili moderatora
+    ''category_names'
+    Imena svih kategorija koja se stavljaju u select sekciju
+
+    **Template**
+    :template:'EasyQuizzy/adding_questions.html'
+    """
     template = loader.get_template('EasyQuizzy/adding_questions.html')
 
     left, right = get_stickers(request)
@@ -145,16 +205,40 @@ def adding_questions(request):
         'messageChange': '',
         'messagePermitted': '',
         'left': left,
-        'right': right
+        'right': right,
+        'category_names': get_category_names()
     }
 
     return HttpResponse(template.render(context, request)) 
 
-'''
-funkcija dodaje novo pitanje prosleđeno putem forme
-proverava se da li pitanje sa unetim tekstom već postoji
-'''  
+ 
+@login_required(login_url='login')
 def add_new_question(request):
+    """
+    Dodaje novo pitanje prosleđeno putem forme.
+    Proverava se da li pitanje sa unetim tekstom već postoji i vraća odgovarajuću poruku.
+
+    **Context**
+    'categories'
+    Slike svih kategorija koje su potrebne za izmenu pitanja
+    'permitted'
+    Rečnik odobrenih pitanja; ključ je redni broj pitanja, a vrednost tekst pitanja
+    'message'
+    Poruka o uspešnosti dodavanja novog pitanja; neuspešno ukoliko pitanje sa unetim tekstom već postoji
+    'messageChange'
+    Poruka o uspešnosti izmene pitanja
+    'messagePermitted'
+    Poruka o uspešnosti dodavanja odobrenog pitanja
+    ''left''
+    Levi navigacioni bar za admina ili moderatora
+    ''right''
+    Desni navigacioni bar za admina ili moderatora
+    ''category_names'
+    Imena svih kategorija koja se stavljaju u select sekciju
+
+    **Template**
+    :template:'EasyQuizzy/adding_questions.html'
+    """
     template = loader.get_template('EasyQuizzy/adding_questions.html')
 
     left, right = get_stickers(request)
@@ -166,13 +250,15 @@ def add_new_question(request):
         'messageChange': '',
         'messagePermitted': '',
         'left': left,
-        'right': right
+        'right': right,
+        'category_names': get_category_names()
     }
 
     if len(request.POST.keys()) != 8:
         msg = 'Niste popunili sva polja!'
     else:
         category = request.POST['category']
+        print(category)
         text = request.POST['question']
         weight = request.POST['weight']
         correct = request.POST['correct']
@@ -205,8 +291,21 @@ def add_new_question(request):
     context['message'] = msg
 
     return HttpResponse(template.render(context, request)) 
-
+    
 def get_questions_category(request):
+    """
+    Obrađuje AJAX zahtev koji vraća sva pitanja koja se odnose na prosleđenu kategoriju.
+    Pitanja se prikazuju pritiskom na sliku koja se odnosi na određenu kategoriju.
+
+    **Context**
+    ''questions''
+    Rečnik koji kao ključ sadrži redni broj pitanja, a kao vrednost listu koja se odnosi na određeno pitanje.
+    Lista sadrži: tekst pitanja, tačan i netačne odgovore, težinu i id pitanja.
+    Ovi podaci se prosleđuju radi prikaza, ali i kako bi se znalo koje pitanje treba da se izmeni.
+
+    **Template**
+    Ne dolazi do promene html stranice.
+    """
     category = request.GET['name']
     
     cat_id = Kategorija.objects.filter(naziv = category).all()
@@ -229,6 +328,9 @@ def get_questions_category(request):
 
     return JsonResponse({'questions' : json.dumps(quest_dict)})
 
+'''
+funkcija vrši izmenu pitanja
+'''
 def question_update(question, text, weight, correct, incorrect1, incorrect2, incorrect3):
         question.tekst_pitanja = text
         question.tezina_pitanja = weight
@@ -238,7 +340,33 @@ def question_update(question, text, weight, correct, incorrect1, incorrect2, inc
         question.netacan3 = incorrect3
         question.save()
 
+@login_required(login_url='login')
 def change_question(request):
+    """
+    Dobija vrednosti svih polja koja treba da se promene.
+    Menja podatke koji se odnose na određeno pitanje.
+
+    **Context**
+    'categories'
+    Slike svih kategorija koje su potrebne za izmenu pitanja
+    'permitted'
+    Rečnik odobrenih pitanja; ključ je redni broj pitanja, a vrednost tekst pitanja
+    'message'
+    Poruka o uspešnosti dodavanja novog pitanja
+    'messageChange'
+    Poruka o uspešnosti izmene pitanja; neuspešno ukoliko pitanje sa izmenjenim tekstom već postoji
+    'messagePermitted'
+    Poruka o uspešnosti dodavanja odobrenog pitanja
+    ''left''
+    Levi navigacioni bar za admina ili moderatora
+    ''right''
+    Desni navigacioni bar za admina ili moderatora
+    ''category_names'
+    Imena svih kategorija koja se stavljaju u select sekciju
+
+    **Template**
+    :template:'EasyQuizzy/adding_questions.html'
+    """
     template = loader.get_template('EasyQuizzy/adding_questions.html')
 
     if len(request.POST.keys()) != 8:
@@ -271,13 +399,40 @@ def change_question(request):
         'messagePermitted': '',
         'messageChange': msg,
         'left': left,
-        'right': right
+        'right': right,
+        'category_names': get_category_names()
     }
     
 
     return HttpResponse(template.render(context, request))
 
+@login_required(login_url='login')
 def add_permitted_question(request):
+    """
+    Dodavanje u bazu izabranog pitanja iz tabele odobrenih.
+
+    **Context**
+    'categories'
+    Slike svih kategorija koje su potrebne za izmenu pitanja
+    'permitted'
+    Rečnik odobrenih pitanja; ključ je redni broj pitanja, a vrednost tekst pitanja
+    'message'
+    Poruka o uspešnosti dodavanja novog pitanja; neuspešno ukoliko nisu sva polja popunjena; jedinstvenost teksta je već proverena
+    'messageChange'
+    Poruka o uspešnosti izmene pitanja
+    'messagePermitted'
+    Poruka o uspešnosti dodavanja odobrenog pitanja
+    ''left''
+    Levi navigacioni bar za admina ili moderatora
+    ''right''
+    Desni navigacioni bar za admina ili moderatora
+    ''category_names'
+    Imena svih kategorija koja se stavljaju u select sekciju
+
+    **Template**
+    :template:'EasyQuizzy/adding_questions.html'
+
+    """
     template = loader.get_template('EasyQuizzy/adding_questions.html')
 
     
@@ -310,12 +465,27 @@ def add_permitted_question(request):
         'message': '',
         'messagePermitted': msg,
         'left': left,
-        'right': right
+        'right': right,
+        'category_names': get_category_names()
     }
 
     return HttpResponse(template.render(context, request))
 
 def show_categories(request):
+    """
+    Prikaz slika i naziva svih postojećih kategorija.
+
+    **Context**
+    ''images''
+    Lista rečnika koji sadrže slike i nazive kategorija
+    ''left''
+    Levi navigacioni bar za prijavljenog korisnika ili gosta
+    ''right''
+    Desni navigacioni bar za prijavljenog korisnika ili gosta
+
+    **Template**
+    :template:'EasyQuizzy/categories.html'
+    """
     template = loader.get_template('EasyQuizzy/categories.html')
 
     images = get_category_images()
@@ -331,6 +501,19 @@ def show_categories(request):
     return HttpResponse(template.render(context, request))
 
 def add_moderator(request):
+    """
+    Obrađuje AJAX zahtev za dodavanje moderatora.
+    U slučaju uspeha briše iz tabele korisnik i dodaje u tabelu moderator.
+
+    **Context**
+    ''message''
+    Poruka uspešnosti; neuspeh ukoliko korisnik ne postoji ili već ima ulogu moderatora
+    ''successfull''
+    Poruka o tome da li je AJAX zahtev uspešno obrađen
+
+    **Template**
+    Ne dolazi do promene html stranice.
+    """
     data = request.body.decode()
     username = data.split("=")[1]
     user_list = Korisnik.objects.filter(korisnicko_ime = username).filter(vazeci = 1).all()
@@ -355,7 +538,22 @@ def add_moderator(request):
         
     return JsonResponse({'message' : msg, 'successful': successful})
 
+@login_required(login_url='login')
 def to_permit(request):
+    """
+    Vraća predložena pitanja iz baze.
+
+    **Context**
+    ''questions''
+    Rečnik koji kao ključ ima redni broj pitanja, a kao vrednost tekst
+    ''left''
+    Levi navigacioni bar za admina
+    ''right''
+    Desni navigacioni bar za admina
+
+    **Template**
+    :template:'EasyQuizzy/question_permission.html'
+    """
     template = loader.get_template('EasyQuizzy/question_permission.html')
 
     left, right = get_stickers(request)
@@ -367,7 +565,23 @@ def to_permit(request):
     }
     return HttpResponse(template.render(context, request))
 
+@login_required(login_url='login')
 def add_to_permitted(request):
+    """
+    Ukoliko su pitanja odobrena ubacuje ih u bazu sa statusom 1.
+    Ukoliko su pitanja odbijena briše ih iz baze i ona više nemaju status predloženih.
+
+    **Context**
+    ''questions''
+    Rečnik koji kao ključ ima redni broj pitanja, a kao vrednost tekst; pitanja su ažurirana u skladu sa promenom
+    ''left''
+    Levi navigacioni bar za admina
+    ''right''
+    Desni navigacioni bar za admina
+
+    **Template**
+    :template:'EasyQuizzy/question_permission.html'
+    """
     template = loader.get_template('EasyQuizzy/question_permission.html')
 
     text_list = request.POST.getlist('checkbox')
@@ -389,7 +603,28 @@ def add_to_permitted(request):
     }
     return HttpResponse(template.render(context, request))
 
+@login_required(login_url='login')
 def changing_categories_page(request):
+    """
+    Vraća stranicu za izmenu kategorija.
+
+    **Context**
+    ''images''
+    Rečnik slika i naziva svih kategorija
+    ''messageChange''
+    Poruka za izmenu kategorija
+    ''left''
+    Levi navigacioni bar za admina ili moderatora
+    ''right''
+    Desni navigacioni bar za admina ili moderatora
+    ''messageQu''
+    Poruka prilikom dodavanja pitanja u cookie
+    ''messageCat''
+    Poruka prilikom dodavanja nove kategorije
+
+    **Template**
+    :template:'EasyQuizzy/adding_categories.html'
+    """
     template = loader.get_template('EasyQuizzy/adding_categories.html')
 
     left, right = get_stickers(request)
@@ -406,7 +641,29 @@ def changing_categories_page(request):
 
     return HttpResponse(template.render(context, request))
 
+@login_required(login_url='login')
 def change_existing_category(request):
+    """
+    Menja sliku ili naziv postojeće kategorije, ili oba
+    Greška se javlja ukoliko kategorija sa datim nazivom već postoji
+
+    *Context**
+    ''images''
+    Rečnik slika i naziva svih kategorija
+    ''messageChange''
+    Poruka za izmenu kategorija; neuspešno ukoliko naziv već postoji ili nije uneto nijedno polje
+    ''left''
+    Levi navigacioni bar za admina ili moderatora
+    ''right''
+    Desni navigacioni bar za admina ili moderatora
+    ''messageQu''
+    Poruka prilikom dodavanja pitanja u cookie
+    ''messageCat''
+    Poruka prilikom dodavanja nove kategorije
+
+    **Template**
+    :template:'EasyQuizzy/adding_categories.html'
+    """
     template = loader.get_template('EasyQuizzy/adding_categories.html')
 
     left, right = get_stickers(request)
@@ -446,7 +703,30 @@ def change_existing_category(request):
    
     return HttpResponse(template.render(context, request))
 
+@login_required(login_url='login')
 def add_question_for_category(request):
+    """
+    Dodaje pitanja unutar cookie-ja.
+    Pitanja se nalaze u rečniku sa ključem 'questions' koji sadrži listu kao vrednost.
+    Lista sadrži liste koje se odnose na pojedinačno pitanje i sadrže podatke o njemu.
+
+    *Context**
+    ''images''
+    Rečnik slika i naziva svih kategorija
+    ''messageChange''
+    Poruka za izmenu kategorija
+    ''left''
+    Levi navigacioni bar za admina ili moderatora
+    ''right''
+    Desni navigacioni bar za admina ili moderatora
+    ''messageQu''
+    Poruka prilikom dodavanja pitanja u cookie; neuspešno ukoliko nisu uneta sva polja 
+    ''messageCat''
+    Poruka prilikom dodavanja nove kategorije
+
+    **Template**
+    :template:'EasyQuizzy/adding_categories.html'
+    """
     template = loader.get_template('EasyQuizzy/adding_categories.html')
 
     left, right = get_stickers(request)
@@ -490,7 +770,33 @@ def add_question_for_category(request):
 
     return response
 
+@login_required(login_url='login')
 def add_new_category(request):
+    """
+    Dodavanje nove kategorije ukoliko su uneti naziv i slika i u cookie-ju se nalazi barem pet pitanja.
+    Vrše se provere da li je tekst svih pitanja jedinstven i ukoliko nije to pitanje se izbacuje i zahteva se unos novog.
+    Ukoliko su svi uslovi zadovoljeni dodaje se nova kategorija u bazu, kao i sva pitanja iz cookie-ja koja sada
+    pripadaju novoj kategoriji.
+
+    *Context**
+    ''images''
+    Rečnik slika i naziva svih kategorija
+    ''messageChange''
+    Poruka za izmenu kategorija
+    ''left''
+    Levi navigacioni bar za admina ili moderatora
+    ''right''
+    Desni navigacioni bar za admina ili moderatora
+    ''messageQu''
+    Poruka prilikom dodavanja pitanja u novu kategoriju
+    ''messageCat''
+    Poruka prilikom dodavanja nove kategorije; 
+    neuspešno ukoliko nisu uneti naziv ili slika, nema pet jedinstvenih pitanja
+
+    **Template**
+    :template:'EasyQuizzy/adding_categories.html'
+
+    """
     template = loader.get_template('EasyQuizzy/adding_categories.html')
 
     left, right = get_stickers(request)
@@ -548,8 +854,6 @@ def add_new_category(request):
         question_update(new_question, question[0], question[1], question[2], question[3], question[4], question[5])
         print(new_question)
     
-    
-
     context['messageCat'] = 'Kategorija je uspešno dodata'
     context['images'] = get_category_images()
 
