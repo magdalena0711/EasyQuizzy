@@ -110,8 +110,12 @@
                 <form action="/easyquizzy/addNewQuestion" method="post">
                     {% csrf_token %}
                     <label class="col-sm-12 col-form-label text-center textQu mb-1">Dodavanje novog pitanja</label>
-                    <label class="col-sm-12 col-form-label textQu">Unesite naziv kategorije: </label>
-                    <input type="text" class="form-control" name="category">
+                    <label class="col-sm-12 col-form-label textQu">Izaberite kategoriju: </label>
+                    <select name="category" style="width:200px;" class="form-select">
+                        {% for elem in category_names %}
+                            <option value="{{elem}}">{{elem}}</option>
+                        {%  endfor %} 
+                    </select>
                     <label class="col-sm-12 col-form-label textQu">Unesite tekst pitanja: </label>
                     <input type="text" class="form-control" name="question">
                     <label class="textQu mt-2">Izaberite težinu pitanja:</label> &nbsp;
@@ -276,8 +280,12 @@
                 </div>
                     <form action="/easyquizzy/addPermittedQuestion" method="post">
                         {% csrf_token %}
-                        <label  class="col-sm-12 col-form-label textQu">Unesite naziv kategorije: </label>
-                        <input type="text" class="form-control" name="category">
+                        <label class="col-sm-12 col-form-label textQu">Izaberite kategoriju: </label>
+                        <select name="category" style="width:200px;" class="form-select">
+                            {% for elem in category_names %}
+                                <option value="{{elem}}">{{elem}}</option>
+                            {%  endfor %} 
+                        </select>
                         <label class="col-sm-12 col-form-label textQu">Tekst pitanja: </label>
                         <input type="text" class="form-control" name="question" id="textPermitted" readonly>
                         <label class="textQu mt-2">Izaberite težinu pitanja:</label> &nbsp;

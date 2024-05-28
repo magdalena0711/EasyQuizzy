@@ -48,6 +48,8 @@ $(document).ready(function(){
         
         answered = true;
         let answer = $(this).val();
+        $(this).css('font-weight', 'bolder');
+        console.log($(this).css('text-weight'));
         
         let myContent = ({
             'answer': answer,
@@ -80,6 +82,7 @@ $(document).ready(function(){
                     let btnIndex = startIndex * 2 + index;
                     console.log(btnIndex);
                     let btn = $("#answer"+btnIndex);
+                    $("#answer"+btnIndex).css('font-weight', 'normal');
                     if (btn.val() == data[username][2]){
                         btn.css({
                             "background-color": "green"
@@ -194,7 +197,7 @@ $(document).ready(function(){
                 tds.each(function(index){
                     let btnIndex = startIndex * 2 + index;
                     $("#answer"+btnIndex).val(data['answers'][btnIndex]);
-                    $("#answer"+btnIndex).css('background-color', "#0d6efd")
+                    $("#answer"+btnIndex).css('background-color', "#0d6efd").css('font-weight', 'normal');
                     
                 })
 

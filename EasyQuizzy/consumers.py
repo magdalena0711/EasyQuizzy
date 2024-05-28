@@ -19,7 +19,7 @@ class Player(AsyncJsonWebsocketConsumer):
             print('connected')
             self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
             print(self.room_name)
-            self.room_group_name = "quiz_%s" % self.room_name
+            self.room_group_name = "room_%s" % self.room_name
             print(self.room_group_name)
             #print(self.channel_name)
             # Join room group
@@ -44,7 +44,11 @@ class Player(AsyncJsonWebsocketConsumer):
         print(text_data)
         self.username = text_data
         redis_conn = get_redis_connection("default")
+        print(f'REDIS CON {redis_conn}')
+        print(f'USERNAME: {self.username}')
+        print(redis_conn.smembers(self.room_group_name))
         redis_conn.sadd(self.room_group_name, self.username)
+        print('prosao')
         if (len(redis_conn.smembers(self.room_group_name)) == 2):
             # drugi korisnik koji se konektovao
             #print('poslao')
@@ -224,6 +228,13 @@ class PlayerGame(AsyncJsonWebsocketConsumer):
         if len(setNum) > 0:
             num = int(setNum[0].decode('utf-8'))
             redis_conn.srem(exchange_question, num)
+        allMembers = redis_conn.hgetall(self.room_group_name)
+        print(f'ALL MEMBERS{allMembers}')
+        if len(allMembers) > 0:
+            for key, val in allMembers.items():
+                redis_conn.hdel(self.room_group_name, key.decode('utf-8'))
+            allMembers = redis_conn.hgetall(self.room_group_name)
+            print(f"AFTER DISCONNECT {len(allMembers)}")
     
 
         self.channel_layer.group_discard(
