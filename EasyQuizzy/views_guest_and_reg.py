@@ -22,14 +22,14 @@ import  os
 #pomoćna funkcija koja vraća korisnika na osnovu korisničkog imena
 def currentUser(korIme):
     """
-    Pomocna funkcija koja vraca korisnika na osnovu njegovog korisnickog imena
+    Pomoćna funkcija koja vraća korisnika na osnovu njegovog korisničkog imena
+    Mora da uzme sve vrste korisnika iz baze, jer se nalaze u različitim tabelama
     :param korIme:
     :return:
     """
     users = RegistrovaniKorisnik.objects.select_related('idkor')
     moder = Moderator.objects.select_related('idkor')
     admin = Administrator.objects.select_related('idkor')
-
     types = ['admin', 'moderator', 'korisnik']
     users_objects = [admin, moder, users]
 
@@ -43,8 +43,13 @@ def currentUser(korIme):
 
 #pomoćna funkcija koja vraća rank korisnika sa zadatim korisničkim imenom
 def findMyRank(korIme):
+    """
+    Pomoćna funkcija koja vraća rank korisnika na osnovu njegovog imena
+    Koristi se u funkciji za statistiku
+    :param korIme:
+    :return:
+    """
     users = Korisnik.objects.filter(vazeci=1).order_by('-broj_poena').all()
-
     i = 1
     for user in users:
         if user.korisnicko_ime == korIme:
@@ -53,13 +58,22 @@ def findMyRank(korIme):
     return i
 
 def questionOfTheDay():
+    """
+    Pomoćna funkcija koja uzima jedno random pitanje koje će
+    biti prikazano u gornjem desnom uglu kao pitanje dana
+    :return:
+    """
     questions = Pitanje.objects.all()
-
     rand = random.randint(1,len(questions)-1)
-
     return questions[rand].tekst_pitanja, questions[rand].tacan_odgovor, questions[rand].netacan1, questions[rand].netacan2, questions[rand].netacan3
 
 def myContext(korIme):
+    """
+    Pomoćna funkcija koja vraća 'kontekst' korisnika na osnovu njegovog korisničkog imena
+    Pod kontekstom se ovde
+    :param korIme:
+    :return:
+    """
     role = myRole(korIme)
 
     if role == 2:
@@ -79,23 +93,22 @@ def statistics(request):
     """
     users = Korisnik.objects.filter(vazeci=1)
     users = users.order_by('-broj_poena').all()
-
     users = users[:10]
-
     template = loader.get_template('EasyQuizzy/statistics.html')
     all_users = list()
     users_objects = [users]
 
     i = 0
-
     korisnik = request.user
-
-    """
-    Korisniku će se vratiti njegova uloga (registrovani korisnik - 0, moderator - 1, admin - 2)
-    """
     role = myRole(korisnik.username)
+    """
+    U promenljivoj role se nalazi broj koji nam govori 
+    Ulogu trenutnog korisnika
+    """
     currUser = currentUser(korisnik.username)
     myRank = findMyRank(korisnik.username)
+    """U promenljivoj myRank se nalazi rang korisnika"""
+
     for user in users_objects[i]:
         user_list = list()
         user_list.append(i+1)
@@ -131,25 +144,21 @@ def statistics(request):
             'left': leftAdmin,
             'right': rightAdmin
         }
-
+    """
+    For petlja služi da u zavisnosti od korisnika i njegove uloga, u kontekst ubaci rank, korisničko ime,
+    broj poena stikere za levi i desni navigacioni meni
+    """
     return HttpResponse(template.render(context, request))
-
-
 
 def loginAsGuest(request):
     """
-    Posebna funkcija za prijavu gosta, jer je loginUser loginRequired funkcija, a gost je korisnik se ne prijavljuje
-
+    Funkcija za prijavu gosta, jer je loginUser funkcija loginRequired funkcija, a gost je korisnik se ne prijavljuje
     :param request:
     :return:
     """
-
     questions = Pitanje.objects.all().order_by('-prosecna_ocena')[:3]
-
-    template = loader.get_template('EasyQuizzy/regMainPage.html')
     bestQuestions = list()
     quest_objects = [questions]
-
     i = 0
     for quest in quest_objects[i]:
         quest_list = list()
@@ -159,21 +168,29 @@ def loginAsGuest(request):
         quest_list.append(quest.prosecna_ocena)
         bestQuestions.append(quest_list)
         i += 1
-
     template = loader.get_template('EasyQuizzy/mainGuestPage.html')
-
     context = {
         'left': leftGuest,
         'right': rightGuest,
         'all_questions': bestQuestions
     }
-
     return HttpResponse(template.render(context, request))
+
 # pomoćna funkcija koja vraća ulogu korisnika sa zadatim korisničkim imenom
 #  0 - registrovani korisnik
 #  1 - moderator
 #  2 - administrator
 def myRole(korIme):
+
+    """
+    Pomoćna funkcija koja vraća ulogu korisnika na osnovu njegovog korisničkog imena
+    Samo registrovani korisnici imaju uloge, gosti nemaju
+    Ako je korisnik administrator, vraćamo broj 2
+    Ako je korisnik moderator, vraćamo broj 1
+    Ako je korisnik samo registrovan, bez dodatnih zaduženja, vraćamo broj 0
+    :param korIme:
+    :return:
+    """
     if korIme == '':
         return -1
 
@@ -195,6 +212,13 @@ def myRole(korIme):
 
 
 def checkIfAnswerIsCorreect(text, answer):
+    """
+    Pomoćna funkcija koja proverava da li je odgovor tačan
+    Ovu funkciju koristi funkcija koja je zadužena za odgovaranje na pitanje dana
+    :param text:
+    :param answer:
+    :return:
+    """
     questions = Pitanje.objects.filter(tekst_pitanja=text).first()
 
     if questions.tacan_odgovor == answer:
@@ -308,17 +332,6 @@ def loginUser(request):
                 request.session['korIme'] = korIme
                 request.session['IdKor_current'] = user.idkor.idkor
                 request.session['role'] = 'registrovani'
-                # AuthUser.objects.create(
-                #     username=korIme,
-                #     password=password,
-                #     email=user.idkor.email,
-                #     first_name=user.idkor.ime,
-                #     last_name=user.idkor.prezime,
-                #     is_active=True,
-                #     is_staff=True,
-                #     is_superuser=False,
-                #     date_joined=datetime.now()
-                # )
                 userRet = User.objects.create_user(username=korIme, password=password)
                 login(request, userRet)
                 return redirect('main')
@@ -366,6 +379,12 @@ def loginUser(request):
 #pomoćna funkcija koja proverava da li pitanje sa zadatim tekstom već postoji
 #jer je tekst pitanja u bazi deinisam kao UNIQUE
 def checkIfQuestionExists(text):
+    """
+    Pomoćna funkcija koja proverava da li pitanje već postoji u bazi
+    Ovu funkciju koristi funkcija koja ubacuje pitanja u bazu prilikom predlaganja
+    :param text:
+    :return:
+    """
     allQuestions = Pitanje.objects.all().filter(tekst_pitanja=text)
 
     if len(allQuestions) == 0:
@@ -406,8 +425,6 @@ def questionSuggestion(request):
         if checkIfQuestionExists(text) == True:
             context['text'] = "Pitanje sa zadatim tekstom već postoji!"
 
-
-
         else:
             new_question = Pitanje()
             new_question.idkat = Kategorija.objects.all().first()  # Možete koristiti .first() umjesto [0]
@@ -431,6 +448,13 @@ def questionSuggestion(request):
 
 #pomoćna funkcija koja proverava da li korisnik sa zadatim imenom već postoji
 def checkIfUserExists(korIme):
+
+    """
+    Pomoćna funkcija koja proverava da li korisnik sa korisničkim imenom postoji
+    Koriste je funkcije za prijavu i registraciju
+    :param korIme:
+    :return:
+    """
     users = RegistrovaniKorisnik.objects.select_related('idkor')
     moder = Moderator.objects.select_related('idkor')
     admin = Administrator.objects.select_related('idkor')
@@ -453,7 +477,12 @@ def checkIfUserExists(korIme):
 # sve prosledjene podatke upisuje u bazu
 # u slučaju da neki od podataka nije zadovoljio određene kriterijume, biće prikazana odgovarajuća greška
 def register(request):
-
+    """
+    Funkcija za registraciju korisnika
+    U slučaju da je registracija uspešna, u bazi se pravi novi korisnik kome je primarna uloga registrovani korisnik
+    :param request:
+    :return:
+    """
     template = loader.get_template('EasyQuizzy/registration.html')
     context = {}
     if request.method == 'POST':
@@ -502,21 +531,13 @@ def register(request):
 # funkcija za odjavljivanje korisnika
 # briše korisnika iz Djangove tabele AuthUser
 def logoutUser(request):
-    # template = loader.get_template('EasyQuizzy/regMainPage.html')
-    # context = {}
-    #
-    # if request.method == 'GET':
-    #     korIme= request.session.get('korIme')
-    #
-    #     korisnik = AuthUser.objects.get(username=korIme)
-    #     korisnik.delete()
-    #
-    #     request.session['korIme'] = ''
-    #     request.session['role'] = ''
-    #
-    #     return redirect('login')
-    #
-    # return HttpResponse(template.render(context, request))
+    """
+    Funkcija za odjavu korisnika
+    S obzirom da se pri prijavi, u bazi koristi i djangova tabela auth_user
+    Prilikom odjave, neophodno je da se novonapravljeni red vezan za korisnika koji se odjavljuje, obriše
+    :param request:
+    :return:
+    """
     korisnik = AuthUser.objects.get(username=request.user.username)
     korisnik.delete()
 

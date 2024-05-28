@@ -62,7 +62,15 @@ def doing_test_button(request):
 def choice_single_multi(request):
     categories=Kategorija.objects.all()
     images=[]
-    request.session['role_user'] = request.session['role']
+
+    role_temp = myRole(request.user.username)
+    if role_temp == 0:
+        request.session['role_user'] = 'registered'
+    elif role_temp == 1:
+        request.session['role_user'] = 'moder'
+    else:
+        request.session['role_user'] = 'admin'    
+    
 
 
     for cat in categories:

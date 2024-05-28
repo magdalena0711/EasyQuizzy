@@ -1,3 +1,7 @@
+//Elena Savić 21/0332
+//Petar Milojević 21/0336
+//Ilija Miletić 21/0335
+//Magdalena Obradović 21/0304
 function submitForm() {
         var single_izbor = document.getElementById('izbor_single').checked;
         var multi_izbor = document.getElementById('izbor_multi').checked;
