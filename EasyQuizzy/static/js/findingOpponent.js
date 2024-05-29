@@ -4,7 +4,11 @@
 //Magdalena Obradović 21/0304
 
 $(document).ready(function(){
-
+    /*
+    Kada igrač uđe u određenu sobu, kreće odbrojavanje vremena koje čeka na suparnika
+    U bilo kom trenutku može da prekine pretragu
+    Tokom pretrage se otvara webSocket koji će se zatvoriti kada dva igrača uđu u istu sobu, tj. kada se spoje
+    */ 
     let searchTime = 1;
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
     const korIme = $("#kor").text();
@@ -30,7 +34,9 @@ $(document).ready(function(){
         this.action = "/easyquizzy/nextMultiplayer/" + roomName + "/";
         this.submit();
     });
-
+    /*
+    Da bi igrač znao sa kim je spojen, u localStorage će sačuvati korisničko ime drugog igrača
+    */ 
     socket.onmessage = function(event){
         const data = JSON.parse(event.data);
         

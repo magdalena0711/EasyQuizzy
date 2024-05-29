@@ -3,6 +3,10 @@
 //Ilija Miletić 21/0335
 //Magdalena Obradović 21/0304
 $(document).ready(function(){
+    //Kada završimo partiju, neophodno je
+    //Obrisati sve podatke sačuvane u localStorage, da bi sledeći igrači
+    //Koji budu koristili isti kod za sobu, ili pak
+    //I isti igrači mogli da igraju sledeće partije
     let username = localStorage.getItem("prvi");
     let usernameOther = localStorage.getItem("drugi");
     let myPoints = localStorage.getItem("myPoints");

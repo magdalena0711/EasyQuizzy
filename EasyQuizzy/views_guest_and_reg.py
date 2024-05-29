@@ -14,10 +14,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .models import *
-
-
 import  os
-
 
 #pomoćna funkcija koja vraća korisnika na osnovu korisničkog imena
 def currentUser(korIme):
@@ -230,8 +227,13 @@ def checkIfAnswerIsCorreect(text, answer):
 #kao i levi i desni navigacioni meni koji se razlikuju u zavisnosti od tipa korisnika
 @login_required(login_url='login')
 def main(request):
-    context={}
+    """
+    Funkcija za glavnu, tj. početnu stranicu
+    Ona obrađuje tri najbolje ocenjena pitanja i na osnovu uloge korisnika
+    kao kontekst vraća različite izglede za levi i desni meni
+    """
 
+    context={}
     korisnik = request.user
     role = myRole(korisnik.username)
 
@@ -290,20 +292,26 @@ def main(request):
     return HttpResponse(template.render(context, request))
 
 def dayQuestion(request):
+    """
+    Pomoćna funkcija za obradu pitanja dana
+    """
     data = request.body.decode()
     print(data)
 
     pitanje = data.split("=")[1]
     odgovor = data.split("=")[3]
 
-
-
-
 # funkcija za prijavu korisnika
 # ako podaci koji su uneti u polje za korisničko ime i lozinku pronađeni u bazi,
 # u sesiji će biti sačuvano korisničko ime korisnika i njegova uloga, i korisnik će
 # biti prebačen na odgovarajuću početnu stranu
 def loginUser(request):
+    """
+    Funkcija za prijavu korisnika
+    U slučaju da je korisnik već prijavljen, biće odmah prebačen na glavnu stranicu
+    U suprotnom će uneti podaci biti provereni, i ako se poklapaju sa podacima iz baze
+    Korisnik će biti prebačen na glavnu stranicu
+    """
     template = loader.get_template('EasyQuizzy/loginPage.html')
 
     context = {}
@@ -321,7 +329,6 @@ def loginUser(request):
             return redirect('main')
 
         for user in registeredUsers:
-
             if user.idkor.korisnicko_ime == korIme and user.idkor.lozinka == password and user.idkor.vazeci == 1:
                 # Ako je korisnik pronađen, prelazi na sledeću stranicu
                 context = {
@@ -337,11 +344,9 @@ def loginUser(request):
                 return redirect('main')
 
         for user in moderatorUsers:
-
             if user.idkor.korisnicko_ime == korIme and user.idkor.lozinka == password and user.idkor.vazeci == 1:
                 # Ako je korisnik pronađen, prelazi na sledeću stranicu
                 context['korisnicko_ime']= korIme
-
                 msg = "Login Successful"
                 request.session['korIme'] = korIme
                 request.session['IdKor_current'] = user.idkor.idkor
@@ -370,9 +375,7 @@ def loginUser(request):
         context['message'] = msg
         return HttpResponse(template.render(context, request))
 
-
-
-    # Ako je zahtev GET ili neki drugi metod, jednostavno prikaži stranicu za prijavu
+    # Ako je zahtev GET ili neki drugi metod, ostaje se na istoj strani
     return HttpResponse(template.render(context, request))
 
 
@@ -394,6 +397,12 @@ def checkIfQuestionExists(text):
 #funkcija za predlaganje pitanja
 @login_required(login_url='login')
 def questionSuggestion(request):
+    """
+    Funkcija za predlaganje pitanja
+    Tekst pitanja koje korisnik predloži, prvo se proveri da li već postoji u bazi
+    Ako ne postoji, upisuje se sa statusom 2, što znači da je pitanje predloženo
+    Ostale podatke će dodati moderator/administrator koji odobri pitanje
+    """
     template = loader.get_template('EasyQuizzy/question_suggestions.html')
     context ={}
 
@@ -530,6 +539,7 @@ def register(request):
 
 # funkcija za odjavljivanje korisnika
 # briše korisnika iz Djangove tabele AuthUser
+@login_required(login_url='login')
 def logoutUser(request):
     """
     Funkcija za odjavu korisnika

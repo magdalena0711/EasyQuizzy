@@ -3,6 +3,12 @@
 //Ilija Miletić 21/0335
 //Magdalena Obradović 21/0304
 function submitForm() {
+        /*
+        Kada se korisnik pojavi na stranici za izbor testa, ima dva izbora
+        Ili će igrati samostalo tj. singleplayer opcija
+        Ili će igrati protiv nekoga, tj. multiplayer opcija
+        */ 
+
         var single_izbor = document.getElementById('izbor_single').checked;
         var multi_izbor = document.getElementById('izbor_multi').checked;
         if(!single_izbor && !multi_izbor)
@@ -26,7 +32,9 @@ $(document).ready(function(){
 
         this.submit();
     }
-
+    /* 
+    Ako igrač izabere muliplayer opciju, pojaviće mu se tektualno polje za upis koda sobe kojoj želi da pristupi, koje će do tada biti skriveno
+    */
     $("#izbor_multi").change(function(){
         if ($("#roomCode").css("display") === "none") {
             $("#roomCode").css("display", "block");
