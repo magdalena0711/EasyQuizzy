@@ -48,7 +48,7 @@ class Player(AsyncJsonWebsocketConsumer):
         """
         self.username = text_data
         redis_conn = get_redis_connection("default")
-        print(redis_conn.smembers(self.room_group_name))
+        print(f'IN LOBBY {redis_conn.smembers(self.room_group_name)}')
         redis_conn.sadd(self.room_group_name, self.username)
         if (len(redis_conn.smembers(self.room_group_name)) == 2):
             # drugi korisnik koji se konektovao
@@ -81,14 +81,16 @@ class Player(AsyncJsonWebsocketConsumer):
                     "type": "start.game",
                     "message": userNames
                 })
+        elif len(redis_conn.smembers(self.room_group_name)) > 2:
+            await self.send(json.dumps({'message': 'occupied'}))
 
     async def disconnect(self, close_code):
         """
         Napuštanje kanala za čekanje drugog igrača
         """
-        redis_conn = get_redis_connection("default")
-        redis_conn.srem(self.room_group_name, self.username)
-        print(redis_conn.smembers(self.room_group_name))
+        # redis_conn = get_redis_connection("default")
+        # redis_conn.srem(self.room_group_name, self.username)
+        # print(redis_conn.smembers(self.room_group_name))
 
         self.channel_layer.group_discard(
             self.room_group_name, self.channel_name
@@ -250,6 +252,13 @@ class PlayerGame(AsyncJsonWebsocketConsumer):
             for key, val in allMembers.items():
                 redis_conn.hdel(self.room_group_name, key.decode('utf-8'))
             allMembers = redis_conn.hgetall(self.room_group_name)
+
+        lobby_group_name = "room_" + self.room_name
+        room_players = redis_conn.smembers(lobby_group_name)
+        for player in room_players:
+            print(f'DELETED PLAYER {player}')
+            redis_conn.srem(lobby_group_name, player)
+            print(f'PLAYER SET {redis_conn.smembers(lobby_group_name)}')
     
         self.channel_layer.group_discard(
             self.room_group_name, self.channel_name

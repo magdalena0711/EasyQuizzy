@@ -31,15 +31,20 @@ $(document).ready(function(){
     socket.onmessage = function(event){
         const data = JSON.parse(event.data);
         
-        let username1 = data['first'];
-        let username2 = data['second'];
-        if (username1 != korIme){
-            localStorage.setItem("drugi", username1);
+        if ("first" in data){
+            let username1 = data['first'];
+            let username2 = data['second'];
+            if (username1 != korIme){
+                localStorage.setItem("drugi", username1);
+            }else{
+                localStorage.setItem("drugi", username2);
+            }
+            console.log(roomName);
+            $("#nextPageMulti").click();
         }else{
-            localStorage.setItem("drugi", username2);
+            alert('Soba je zauzeta! Izađite i uđite u neku drugu sobu!')
         }
-        console.log(roomName);
-        $("#nextPageMulti").click();
+        
 
     };
 
